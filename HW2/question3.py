@@ -27,8 +27,6 @@ for n in training_set_sizes:
     
     X_test = current_test_set[:, :-1]
     y_test = current_test_set[:, -1]
-
-    # X_train, X_test, y_train, y_test = train_test_split(current_training_set[:, :-1], current_training_set[:, -1], test_size=0.3,random_state=42)
     
     clf = DecisionTreeClassifier()
     clf.fit(X_train, y_train)
