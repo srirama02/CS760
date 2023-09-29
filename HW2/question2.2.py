@@ -66,7 +66,7 @@ def find_best_split(data, labels):
                 continue
             info_gain_ratio = information_gain_ratio(labels, left_labels, right_labels)
 
-            if info_gain_ratio == None:
+            if info_gain_ratio == None or info_gain_ratio == 0:
                 best_feature_idx = None
                 best_threshold = None
                 return best_feature_idx, best_threshold
@@ -75,7 +75,6 @@ def find_best_split(data, labels):
                 best_info_gain_ratio = info_gain_ratio
                 best_feature_idx = feature_idx
                 best_threshold = threshold
-
     return best_feature_idx, best_threshold
 
 nodeCounter = 0
@@ -87,8 +86,6 @@ def build_decision_tree(data, labels):
         return DecisionTreeNode(value=labels[0], leaf=True)
 
     best_feature_idx, best_threshold = find_best_split(data, labels)
-
-    print(best_feature_idx, best_threshold)
 
     if best_feature_idx is None:
         return DecisionTreeNode(value=1) 
@@ -146,9 +143,32 @@ if __name__ == '__main__':
     labels = np.array([0, 0, 0, 1])
 
 
+    # class_0_points = np.array([[1.0, 0.0], [2.0, 0.0], [3.0, 0.0]])
+    # class_1_points = np.array([[1.5, 0.0]])
+    # labels = np.array([0, 0, 0, 1])
+
     # class_0_points = np.array([[1.0, 1.0], [0.0, 0.0]])
     # class_1_points = np.array([[0.0, 1.0]])
     # labels = np.array([0, 0, 1])
+#     data = {
+#     "X": [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+#     "Y": [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+#     "Class": ["A", "B", "A", "B", "A", "B", "A", "B"]
+# }
+
+#     X = np.array(data["X"])
+#     Y = np.array(data["Y"])
+#     Class = np.array(data["Class"])
+
+#     # Separate the data into class_0_points and class_1_points based on the "Class" labels
+#     class_0_points = np.vstack((X[Class == "A"], Y[Class == "A"])).T
+#     class_1_points = np.vstack((X[Class == "B"], Y[Class == "B"])).T
+
+#     labels = np.array([0] * len(class_0_points) + [1] * len(class_1_points))
+
+
+
+
     training_set = np.vstack((class_0_points, class_1_points))
     # print(training_set)
     decision_tree = build_decision_tree(training_set, labels)
