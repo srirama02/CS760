@@ -284,8 +284,12 @@ Print and include in final report the prior probabilities.
 (Hint: Store all probabilities here and below in $\log()$ internally to avoid underflow. This also means you need to do arithmetic in log-space.  But answer questions with probability, not log probability.)
 
 \begin{soln}
-    The formula for additive smoothing with parameter $\frac{1}{2}$ would be:
-        $$\hat p(y) = \frac{N_y + \frac{1}{2}}{N + \frac{1}{2} \cdot k}$$
+    The formula for additive smoothing with parameter $\frac{1}{2}$ and k = 3 would be:
+        $$\hat p(y) = \frac{N_y + \frac{1}{2}}{N + \frac{1}{2} \cdot 3}$$
+
+    $\hat p(y=e): 0.3314335192958997$
+    $\hat p(y=j): 0.3133925929173471$
+    $\hat p(y=s): 0.3551738877867532$
 \end{soln}
 
 \item
@@ -296,14 +300,40 @@ Again use additive smoothing with parameter $\frac{1}{2}$.
 Give the formula for additive smoothing with parameter $\frac{1}{2}$ in this case. 
 Print $\theta_e$ and include in final report which is a vector with 27 elements.
 
+\begin{soln}
+    The formula for additive smoothing with parameter $\frac{1}{2}$ and k = 27 would be:
+        $$\hat p(X_{i} = j|Y = Y) = \frac{n_{char_j} + \frac{1}{2}}{n_{totalchars} + \frac{1}{2} \cdot 27}$$
+        $$ [0.0602, 0.0111, 0.0215, 0.022, 0.1054, 0.0189, 0.0175, 0.0472, 0.0554, 0.0014, 0.0037, $$
+        $$ 0.029, 0.0205, 0.0579, 0.0645, 0.0168, 0.0006, 0.0538, 0.0662, 0.0801, 0.0267, 0.0093,  $$
+        $$0.0155, 0.0012, 0.0138, 0.0006, 0.1792]$$
+\end{soln}
+
 
 \item
 Print $\theta_j, \theta_s$ and include in final report the class conditional probabilities for Japanese and Spanish.
+
+\begin{soln}
+
+    Japanese:
+    $$[0.1318, 0.0109, 0.0055, 0.0172, 0.0602, 0.0039, 0.014, 0.0318, 0.097, 0.0023, 0.0574, 0.0014, 0.0398,$$
+    $$0.0567, 0.0912, 0.0009, 0.0001, 0.0428, 0.0422, 0.057, 0.0706, 0.0002, 0.0197, 0.0, 0.0142, 0.0077, 0.1234]$$
+
+    Spanish:
+    $$[0.1046, 0.0082, 0.0375, 0.0397, 0.1138, 0.0086, 0.0072, 0.0045, 0.0499, 0.0066, 0.0003, 0.0529, 0.0258,$$
+    $$0.0542, 0.0725, 0.0243, 0.0077, 0.0593, 0.0658, 0.0356, 0.0337, 0.0059, 0.0001, 0.0025, 0.0079, 0.0027, 0.1683]$$
+
+\end{soln}
+
 
 \item
 Treat e10.txt as a test document $x$.
 Represent $x$ as a bag-of-words count vector (Hint: the vocabulary has size 27).
 Print the bag-of-words vector $x$ and include in final report.
+
+\begin{soln}
+    Bag-of-words vector for e10.txt: \\
+    $$[164, 32, 53, 57, 311, 55, 51, 140, 140, 3, 6, 85, 64, 139, 182, 53, 3, 141, 186, 225, 65, 31, 47, 4, 38, 2, 498]$$
+\end{soln}
 
 \item
 Compute $\hat p(x \mid y)$ for $y=e, j, s$ under the multinomial model assumption, respectively.

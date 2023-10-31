@@ -1,96 +1,39 @@
 import os
-import collections
-import math
 
-# Step 1: Load and Preprocess the Data
-def load_data(path):
-    data = {}
-    for root, _, files in os.walk(path):
-        for file in files:
-            lang = file[0]  # First character is the class label
-            with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
-                text = f.read()
-                # Tokenize text into characters and filter for a to z and space
-                tokens = [c for c in text if c in 'abcdefghijklmnopqrstuvwxyz ']
-                data[file] = (lang, tokens)
-    return data
+folder_path = 'languageID'
 
-# Step 2: Split the Data
-def split_data(data, num_training_per_class=10):
-    train_data, test_data = [], []
-    class_counts = collections.defaultdict(int)
-    
-    for filename, (lang, tokens) in data.items():
-        if class_counts[lang] < num_training_per_class:
-            train_data.append((lang, tokens))
-            class_counts[lang] += 1
-        else:
-            test_data.append((lang, tokens))
-    
-    return train_data, test_data
+# Counters for characters in each language's documents
+char_count_e = 0
+char_count_j = 0
+char_count_s = 0
 
-# Step 3: Estimate Prior Probabilities with Additive Smoothing
-def estimate_priors(train_data, alpha=0.5):
-    class_counts = collections.defaultdict(int)
-    total_count = 0
+# Function to count valid characters in a file
+def count_chars(filepath):
+    with open(filepath, 'r', encoding="utf-8") as f:
+        content = f.read()
+        return sum(1 for char in content if char.islower() or char == ' ')
 
-    for lang, _ in train_data:
-        class_counts[lang] += 1
-        total_count += 1
+# Count characters for each language in the training data (0.txt to 9.txt)
+for filename in os.listdir(folder_path):
+    if filename.endswith(".txt") and int(filename[1:-4]) < 10:
+        filepath = os.path.join(folder_path, filename)
+        if filename.startswith('e'):
+            char_count_e += count_chars(filepath)
+        elif filename.startswith('j'):
+            char_count_j += count_chars(filepath)
+        elif filename.startswith('s'):
+            char_count_s += count_chars(filepath)
 
-    priors = {}
-    num_classes = len(class_counts)
+# Total character count
+total_char_count = char_count_e + char_count_j + char_count_s
+alpha = 0.5
+K = 3
 
-    for lang in class_counts:
-        priors[lang] = (class_counts[lang] + alpha) / (total_count + alpha * num_classes)
+# Compute prior probabilities based on character counts with additive smoothing
+p_e = (char_count_e + alpha) / (total_char_count + alpha * K)
+p_j = (char_count_j + alpha) / (total_char_count + alpha * K)
+p_s = (char_count_s + alpha) / (total_char_count + alpha * K)
 
-    return priors
-
-# Step 4 and 5: Classify Documents and Make Predictions
-def classify_documents(test_data, priors, alpha=0.5):
-    predictions = []
-
-    for lang, tokens in test_data:
-        class_probs = {}
-        for label, prior in priors.items():
-            log_prob = math.log(prior)
-            for token in tokens:
-                class_counts = collections.defaultdict(int)
-                for _, train_tokens in train_data:
-                    class_counts[label] += train_tokens.count(token)
-                token_prob = (class_counts[label] + alpha) / (class_counts[label] + alpha * len(vocabulary))
-                log_prob += math.log(token_prob)
-            class_probs[label] = log_prob
-
-        predicted_lang = max(class_probs, key=class_probs.get)
-        predictions.append((lang, predicted_lang))
-
-    return predictions
-
-# Step 6: Evaluate the Classifier
-def evaluate(predictions):
-    correct = 0
-    total = len(predictions)
-    
-    for actual, predicted in predictions:
-        if actual == predicted:
-            correct += 1
-    
-    accuracy = correct / total
-    return accuracy
-
-# Main script
-if __name__ == "__main__":
-    data = load_data("languageID")
-    train_data, test_data = split_data(data, num_training_per_class=10)
-    vocabulary = 'abcdefghijklmnopqrstuvwxyz '
-    alpha = 0.5
-    priors = estimate_priors(train_data, alpha)
-    predictions = classify_documents(test_data, priors, alpha)
-    accuracy = evaluate(predictions)
-
-    print("Prior Probabilities:")
-    for lang, prior in priors.items():
-        print(f"P({lang}) = {prior:.4f}")
-
-    print(f"Accuracy: {accuracy:.4f}")
+print(f"P(y=e): {p_e}")
+print(f"P(y=j): {p_j}")
+print(f"P(y=s): {p_s}")
