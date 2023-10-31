@@ -30,6 +30,8 @@
 \usepackage{caption}
 \usepackage{bbm}
 \usepackage{enumitem}
+\usepackage{placeins}
+
 
 
 \urlstyle{rm}
@@ -117,7 +119,9 @@
 \author{
 Sriram Ashokkumar\\
 908 216 3750\\
+Github: 
 } 
+
 
 \date{}
 
@@ -139,79 +143,55 @@ using the following two prediction strategies respectively?  Prove your answer.
 Strategy 1: $\hat x \in \argmax_x \theta_x$, the outcome with the highest probability.
 
 \begin{soln}
-    % \begin{align*}
-    %     \E[\ind_{\hat x \neq x}] &= \sum_{i=1}^k \theta_i \ind_{\hat x \neq x} \\
-    %     &= \sum_{i=1}^k \theta_i \ind_{\hat x \neq i} \\
-    %     &= \sum_{i=1}^k \theta_i (1 - \ind_{\hat x = i}) \\
-    %     &= 1 - \sum_{i=1}^k \theta_i \ind_{\hat x = i} \\
-    %     &= 1 - \theta_{\hat x} \\
-    %     &= 1 - \max_{i=1}^k \theta_i
-    % \end{align*}
-
-    In Strategy 1, the prediction is made by selecting the category with the highest probability, which is given by $\hat x = \argmax_x \theta_x$. We want to calculate the expected 0-1 loss for this strategy. The expected 0-1 loss is the probability of making an incorrect prediction, which is equivalent to the probability of $\hat x \neq x$. 
-
-    We can express this probability using the law of total probability as follows:
-
+    0-1 loss function:
     \[
-    \begin{align*}
-    \E[\ind_{\hat x \neq x}] &= \sum_{x} \E[\ind_{\hat x \neq x} \,|\, x] \cdot P(x) \\
-    &= \sum_{x} \ind_{\hat x \neq x} \cdot P(x)
-    \end{align*}
+    L(y, \hat{y}) = 
+    \begin{cases} 
+    0 & \text{if } y = \hat{y} \\
+    1 & \text{if } y \neq \hat{y} 
+    \end{cases}
+    \]
+    For strategy 1, since we are just using the oberservation with the highest probability, the expected 0-1 loss is:
+    \[
+    \E[\mathbb{I}_{\hat{x} \neq x}] = \sum_{i=1}^{k} P(x = i) \times L(i, \hat{x})
     \]
 
-    Now, because we are using Strategy 1, $\hat x = \argmax_x \theta_x$. This means that $\hat x$ is the category with the highest probability, and for any $x' \neq \hat x$, $\theta_{\hat x} \geq \theta_{x'}$. 
+    For each $i \neq \hat{x}$, $L(i, \hat{x}) = 1$ and for $i = \hat{x}$, $L(i, \hat{x}) = 0$.
 
-    So, we can rewrite the above expression as:
+    The prediction $\hat{x}$ is the index of the maximum value in $\theta$. Therefore, $P(x = \hat{x}) = \max(\theta)$ and for all other outcomes, $P(x = i) = \theta_i$.
 
+    Using loss function:
     \[
-    \begin{align*}
-    \E[\ind_{\hat x \neq x}] &= \sum_{x} \ind_{\hat x \neq x} \cdot P(x) \\
-    &= \sum_{x} \ind_{\hat x \neq x} \cdot \theta_x \\
-    &= \theta_{\hat x}
-    \end{align*}
+    \E[\mathbb{I}_{\hat{x} \neq x}] = \sum_{\substack{i=1 \\ i \neq \hat{x}}}^{k} \theta_i \times 1 + \max(\theta) \times 0 
+    \]
+    \[
+    = \sum_{i=1}^{k} \theta_i - \max(\theta)
     \]
 
-    The final expression shows that the expected 0-1 loss for Strategy 1 is equal to the probability of selecting the correct category, which is $\theta_{\hat x}$. This result makes intuitive sense because in Strategy 1, you always choose the category with the highest probability, so the expected loss is simply the probability of that category being the correct one.
-
+    As the probabilities sum up to 1 (i.e., $\sum_{i=1}^{k} \theta_i = 1$):
+    \[
+    \E[\mathbb{I}_{\hat{x} \neq x}] = 1 - \max(\theta)
+    \]
 \end{soln}
 
 Strategy 2: You mimic the world by generating a prediction $\hat x \sim \mbox{multinomial}(\theta)$.  (Hint: your randomness and the world's randomness are independent)
 
 \begin{soln}
-    In Strategy 2, the prediction is made by generating a random variable $\hat x$ that follows the same multinomial distribution as the true observation $x$, which is $\hat x \sim \text{multinomial}(\theta)$. To calculate the expected 0-1 loss for this strategy, we need to find the probability of making an incorrect prediction, which is the probability that $\hat x \neq x$.
-
-    We can calculate the expected 0-1 loss as follows:
-
-    \[
+    
     \begin{align*}
-    \E[\ind_{\hat x \neq x}] &= P(\hat x \neq x) \\
-    &= 1 - P(\hat x = x)
+    \E[\mathbb{I}_{\hat{x} \neq x}] &= \sum_{i=1}^{k} \sum_{j=1}^{k} P(\hat{x} = j, x = i) \times \mathbb{I}_{j \neq i} \\
+    &= \sum_{i=1}^{k} \sum_{j=1, j \neq i}^{k} P(\hat{x} = j, x = i) \\
+    &= \sum_{i=1}^{k} \sum_{j=1, j \neq i}^{k} \theta_j \times \theta_i \\
+    &= \sum_{i=1}^{k} \theta_i - \sum_{i=1}^{k} \theta_i^2
     \end{align*}
-    \]
 
-    Now, because $\hat x$ follows the same multinomial distribution as $x$, $P(\hat x = x)$ is simply the probability of observing the true category $x$ under the distribution $\theta$. Therefore:
-
-    \[
-    P(\hat x = x) = \theta_x
-    \]
-
-    Substituting this into the previous expression:
+    Given $\sum_{i=1}^{k} \theta_i = 1$, this simplifies to:
 
     \[
-    \begin{align*}
-    \E[\ind_{\hat x \neq x}] &= 1 - P(\hat x = x) \\
-    &= 1 - \theta_x
-    \end{align*}
+    \E[\mathbb{I}_{\hat{x} \neq x}] = 1 - \sum_{i=1}^{k} \theta_i^2
     \]
 
-    So, the expected 0-1 loss for Strategy 2 is given by:
-
-    \[
-    \E[\ind_{\hat x \neq x}] = 1 - \theta_x
-    \]
-
-    This result shows that the expected 0-1 loss for Strategy 2 is equal to 1 minus the probability of selecting the correct category, which is $\theta_x$. This makes sense because in Strategy 2, you mimic the randomness of the world, and the expected loss is the probability of making an incorrect prediction.
-
+    So, the expected 0-1 loss when using Strategy 2 is \( 1 - \sum_{i=1}^{k} \theta_i^2 \).
 \end{soln}
 
 \section{Best Prediction Under Different Misclassification Losses (6 pts)}
@@ -225,39 +205,22 @@ $$\E[c_{x \hat x}]$$
 Derive your optimal prediction $\hat x$.
 
 \begin{soln}
-    We want to minimize the expected loss, which is given by:
 
-    \[
-    \begin{align*}
-    \E[c_{x \hat x}] &= \sum_{x, \hat x} c_{x \hat x} \cdot P(x, \hat x) \\
-    &= \sum_{x, \hat x} c_{x \hat x} \cdot P(\hat x \,|\, x) \cdot P(x)
-    \end{align*}
-    \]
+    For a fixed prediction \( \hat{x} = j \), the expected loss is:
 
-    Now, we can express $P(\hat x \,|\, x)$ as follows:
+    \[ \E[c_{xj}] = \sum_{i=1}^{k} P(x=i) \times c_{ij} = \sum_{i=1}^{k} \theta_i c_{ij} \]
 
-    \[
-    P(\hat x \,|\, x) = 
-    \begin{cases}
-    1 & \text{if } \hat x = x \\
-    0 & \text{otherwise}
-    \end{cases}
-    \]
+    We want to choose \( j \) to minimize this sum. 
 
-    This is because we want to minimize the expected loss, so we will always choose the category $\hat x$ that minimizes the loss. If $\hat x = x$, then the loss is 0, so we will always choose $\hat x = x$. If $\hat x \neq x$, then the loss is $c_{x \hat x}$, so we will never choose $\hat x \neq x$.
+    So, for each possible prediction \( j \), compute:
 
-    Substituting this into the previous expression:
+    \[ L_j = \sum_{i=1}^{k} \theta_i c_{ij} \]
 
-    \[
-    \begin{align*}
-    \E[c_{x \hat x}] &= \sum_{x, \hat x} c_{x \hat x} \cdot P(\hat x \,|\, x) \cdot P(x) \\
-    &= \sum_{x, \hat x} c_{x \hat x} \cdot \ind_{\hat x = x} \cdot P(x) \\
-    &= \sum_{x} c_{x x} \cdot P(x) \\
-    &= \sum_{x} c_{x x} \cdot \theta_x
-    \end{align*}
-    \]
+    Then the optimal prediction \( \hat{x} \) is:
 
-    The final expression shows that the expected loss is minimized when we choose the category $\hat x$ that minimizes the loss, which is the category with the highest probability. This is the same as Strategy 1 from the previous question, so the optimal prediction is given by $\hat x = \argmax_x \theta_x$.
+    \[ \hat{x} \in \arg\min_j L_j \]
+
+    Pick the \( j \) that has the smallest expected loss. 
 \end{soln}
 
 
@@ -367,8 +330,31 @@ Show the predicted class label of $x$.
 \item
 Evaluate the performance of your classifier on the test set (files 10.txt to 19.txt in three languages).
 Present the performance using a confusion matrix. A confusion matrix summarizes the types of errors your classifier makes, as shown in the table below.   The columns are the true language a document is in, and the rows are the classified outcome of that document.  The cells are the number of test documents in that situation.  For example, the cell with row = English and column = Spanish contains the number of test documents that are really Spanish, but misclassified as English by your classifier.
+\begin{soln}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Predicted/True} & \textbf{English} & \textbf{Japanese} & \textbf{Spanish} \\
+            \hline
+            \textbf{English} & 10 & 0 & 0 \\
+            \hline
+            \textbf{Japanese} & 0 & 10 & 0 \\
+            \hline
+            \textbf{Spanish} & 0 & 0 & 10 \\
+            \hline
+        \end{tabular}
+    \end{table}    
+\end{soln}
+
 
 \item If you take a test document and arbitrarily shuffle the order of its characters so that the words (and spaces) are scrambled beyond human recognition.  How does this shuffling affect your Naive Bayes classifier's prediction on this document?  Explain the key mathematical step in the Naive Bayes model that justifies your answer.
+
+\begin{soln}
+    It does not affect the prediction of my Naive Bayes classifier.  The key mathematical step is that the Naive Bayes model assumes that the characters are independent of each other (conditional independence), so the order of the characters does not matter.
+    We only care about the counts of each character type, not the order of the characters.
+\end{soln}
+
 
 \end{enumerate}
 
@@ -388,39 +374,114 @@ L(x, y) = -\sum_{i=1}^k y \text{log}(\hat{y})
 \begin{enumerate}
     \item Derive backpropagation updates for the above neural network. (5 pts) \\
     \begin{soln}
-        1. Output Layer (Softmax Layer):
-            The softmax layer computes the output as \(\hat{y}_i = g(z_i) = \frac{e^{z_i}}{\sum_{j=1}^k e^{z_j}}\) for \(i = 1, 2, \ldots, k\), where \(z_i\) is the input to the softmax function for each output class. The cross-entropy loss is given by \(L(x, y) = -\sum_{i=1}^k y_i \log(\hat{y}_i)\).
 
-            The gradient of the loss with respect to the input to the softmax function \(z_i\) is:
-            \[ \frac{\partial L}{\partial z_i} = \hat{y}_i - y_i \]
+        
+    Gradient with respect to \( z_2 \):
+    \begin{equation}
+    \frac{\partial L}{\partial z_2} = \hat{y} - y
+    \end{equation}
 
-            The update for the weights of the output layer (\(W_2\)) can be computed as:
-            \[ \Delta W_2 = \frac{\partial L}{\partial z} \cdot \sigma(W_1 x)^T \]
+    Gradient for \( W_2 \):
+    \begin{align*}
+    \frac{\partial L}{\partial W_2} &= \frac{\partial L}{\partial z_2} \frac{\partial z_2}{\partial W_2} \\
+    \frac{\partial z_2}{\partial W_2} &= a_1 \\
+    \frac{\partial L}{\partial W_2} &= (\hat{y} - y) a_1^T
+    \end{align*}
 
-        2. Hidden Layer:
-            The hidden layer uses the sigmoid activation function: \(a = \sigma(W_1 x)\). The gradient of the loss with respect to the output of the hidden layer \(a\) is given by:
-            \[ \frac{\partial L}{\partial a} = (W_2^T \frac{\partial L}{\partial z}) \circ \sigma'(W_1 x) \]
+    Gradient for \( a_1 \):
+    \begin{align*}
+    \frac{\partial L}{\partial a_1} &= \frac{\partial L}{\partial z_2} \frac{\partial z_2}{\partial a_1} \\
+    \frac{\partial z_2}{\partial a_1} &= W_2 \\
+    \frac{\partial L}{\partial a_1} &= W_2^T (\hat{y} - y)
+    \end{align*}
 
-            Here, \(\circ\) denotes element-wise multiplication, and \(\sigma'(z)\) is the derivative of the sigmoid function.
+    Gradient for \( z_1 \):
+    \begin{align*}
+    \frac{\partial a_1}{\partial z_1} &= \sigma(z_1) (1 - \sigma(z_1)) \\
+    \frac{\partial L}{\partial z_1} &= \frac{\partial L}{\partial a_1} \frac{\partial a_1}{\partial z_1} \\
+    \frac{\partial L}{\partial z_1} &= W_2^T (\hat{y} - y) \cdot \sigma(z_1) (1 - \sigma(z_1))
+    \end{align*}
 
-            The update for the weights of the hidden layer (\(W_1\)) is:
-            \[ \Delta W_1 = \frac{\partial L}{\partial a} \cdot x^T \]
+    Gradient for \( W_1 \):
+    \begin{align*}
+    \frac{\partial L}{\partial W_1} &= \frac{\partial L}{\partial z_1} \frac{\partial z_1}{\partial W_1} \\
+    \frac{\partial z_1}{\partial W_1} &= x \\
+    \frac{\partial L}{\partial W_1} &= W_2^T (\hat{y} - y) \cdot \sigma(z_1) (1 - \sigma(z_1)) x^T
+    \end{align*}
 
-        3. Input Layer:
-            The input layer simply passes on the data, so the gradient of the loss with respect to the input \(x\) is:
-            \[ \frac{\partial L}{\partial x} = W_1^T \frac{\partial L}{\partial a} \]
+    Backpropagation Updates:
+    \begin{align*}
+    W_2 &\leftarrow W_2 - (\hat{y} - y) a_1^T \\
+    W_1 &\leftarrow W_1 - W_2^T (\hat{y} - y) \cdot \sigma(z_1) (1 - \sigma(z_1)) x^T
+    \end{align*}
 
     \end{soln}
     \item Implement it in NumPy or PyTorch using basic linear algebra operations. (e.g. You are not allowed to use auto-grad, built-in optimizer, model, etc. in this step. You can use library functions for data loading, processing, etc.). Evaluate your implementation on MNIST dataset, report test errors and learning curve. (10 pts)
+    \\
     \begin{soln}
-        Test Errors:
+        Hyperparameters: \\
+        Learning Rate: 0.001 \\
+        Batch Size: 64 \\
+        Epochs: 5 \\
+        \\
+        Test Errors:\\
+        $$Epoch 1, Test Error: 0.1364$$
+        $$Epoch 2, Test Error: 0.1016$$
+        $$Epoch 3, Test Error: 0.0908$$
+        $$Epoch 4, Test Error: 0.0851$$
+        $$Epoch 5, Test Error: 0.0784$$
+        $$Epoch 6, Test Error: 0.0744$$
+        $$Epoch 7, Test Error: 0.0704$$
 
-
-        Learning Curve:
+        Learning Curve:\\
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.4\textwidth]{4.2.png}  
+        \end{figure}
     \end{soln}
     \item Implement the same network in PyTorch (or any other framework). You can use all the features of the framework e.g. auto-grad etc. Evaluate it on MNIST dataset, report test errors, and learning curve. (2 pts)
+    \\
+    \begin{soln}
+        Hyperparameters: \\
+        Learning Rate: 0.001 \\
+        Batch Size: 64 \\
+        Epochs: 5 \\
+        \\
+        Test Errors:\\
+        The test error is $0.04$.
+
+        Learning Curve:\\
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.4\textwidth]{4.3.png}  
+        \end{figure}
+    \end{soln}
     
     \item Try different weight initialization a) all weights initialized to 0, and b) initialize the weights randomly between -1 and 1. Report test error and learning curves for both. (You can use either of the implementations) (3 pts)
+    
+    \begin{soln}
+        Used implementation from 4.3 and the same hyperparameters.\\
+        a.\\
+        Test Errors:\\
+        The test error is $0.65$\\
+
+        Learning Curve:\\
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.4\textwidth]{4.3.a.png}  
+        \end{figure}
+        \FloatBarrier
+
+        b.\\
+        Test Errors:\\
+        The test error is $0.90$\\
+        Learning Curve:\\
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.4\textwidth]{4.3.b.png}  
+        \end{figure}
+        \FloatBarrier
+    \end{soln}
 \end{enumerate}
 
 You should play with different hyperparameters like learning rate, batch size, etc. for your own learning. You only need to report results for any particular setting of hyperparameters. You should mention the values of those along with the results. Use $d_1 = 300$, $d_2 = 200$. For optimization use SGD (Stochastic gradient descent) without momentum, with some batch size say 32, 64, etc. MNIST can be obtained from here (https://pytorch.org/vision/ stable/datasets.html)

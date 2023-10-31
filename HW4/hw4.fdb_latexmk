@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1698722153 "/Users/sriramashokkumar/Documents/CS760/hwGIT/CS760/HW4/hw4.tex" "hw4.pdf" "hw4" 1698722154 2
-  "/Users/sriramashokkumar/Documents/CS760/hwGIT/CS760/HW4/hw4.tex" 1698722152 19125 6c478f5fc53df0c8f9f8e2b9b8caa29c ""
+["pdflatex"] 1698730756 "/Users/sriramashokkumar/Documents/CS760/hwGIT/CS760/HW4/hw4.tex" "hw4.pdf" "hw4" 1698730757 0
+  "/Users/sriramashokkumar/Documents/CS760/hwGIT/CS760/HW4/hw4.tex" 1698730755 19024 80fd490b3dcd5ad05110c77eedda14a3 ""
   "/Users/sriramashokkumar/Library/texlive/2023/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.600pk" 1698372243 6964 5442cdf8e8b7e34fb8024ed35b83f355 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -119,6 +119,7 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty" 1615845910 6149 2398eec4faa1ee24ff761581e580ecf1 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty" 1291685959 45456 1c8843383c0bd05870c45fa0ebea6cc2 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/paralist/paralist.sty" 1485124581 14857 82c76ebe8f06becf69ab309565b2a0cb ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/placeins/placeins.sty" 1137110565 4087 636308456f60d2b31cbf97867db5708d ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/psnfss/ot1ptm.fd" 1137110629 961 15056f4a61917ceed3a44e4ac11fcc52 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/psnfss/times.sty" 1586716065 856 8e0e5c8cca7b18e0400f97f5a2b90a99 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/refcount/refcount.sty" 1576624809 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
@@ -135,9 +136,13 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1693927812 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1693927794 7883466 7438f6975b33fc09a45c75e066b5551c ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "hw4.aux" 1698722154 1152 aa9b22bb74bdaf7a7dba0e736bd9efd0 "pdflatex"
-  "hw4.out" 1698722154 1220 43f568e1c634151e6a708d9f1ec6215a "pdflatex"
-  "hw4.tex" 1698722152 19125 6c478f5fc53df0c8f9f8e2b9b8caa29c ""
+  "4.2.png" 1698728493 21404 df39802c6b8518d7acbc76c776159ebf ""
+  "4.3.a.png" 1698729020 26911 bffaa070174adc91f5956eb6f67ae306 ""
+  "4.3.b.png" 1698729047 23800 63efbc538e65c6e6b389010d932656eb ""
+  "4.3.png" 1698728175 24783 0005a58bf0307b147f9d0da5b6ac1547 ""
+  "hw4.aux" 1698730756 1152 62c6a7e8eb891ef93fa33cd21ec10bce "pdflatex"
+  "hw4.out" 1698730756 1220 43f568e1c634151e6a708d9f1ec6215a "pdflatex"
+  "hw4.tex" 1698730755 19024 80fd490b3dcd5ad05110c77eedda14a3 ""
   (generated)
   "hw4.aux"
   "hw4.log"

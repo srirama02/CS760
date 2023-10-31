@@ -49,15 +49,44 @@ def compute_probability_given_language(x, theta):
     log_probability = 0
     for i, xi in enumerate(x):
         char = list(char_counts_test.keys())[i]
-        print(char, xi, theta[char], math.log(theta[char]))
-        log_probability += xi * math.log(theta[char])  # Summing log probabilities
-    print(log_probability, math.exp(log_probability))
-    return math.exp(log_probability)  # Convert back from log space to regular probabilities
+        log_probability += xi * theta[char] 
+    return log_probability
+
+# def OLDcompute_probability_given_language(x, theta):
+#     log_probability = 0
+#     for i, xi in enumerate(x):
+#         char = list(char_counts_test.keys())[i]
+#         log_probability += xi * theta[char] 
+#     return log_probability
+
+# def compute_conditional_prob(x, theta, chunk_size=10):
+#     # words = list(x.keys())
+#     probs = []
+    
+#     # Compute product in chunks
+#     for i in range(0, len(words), chunk_size):
+#         chunk_prob = 1.0
+#         for word in words[i:i+chunk_size]:
+#             count = x[word]
+#             theta = compute_theta(word, lang)
+#             chunk_prob *= theta**count
+#         probs.append(chunk_prob)
+
+    # Compute the overall product
+    # overall_prob = 1.0
+    # for prob in probs:
+    #     overall_prob *= prob
+
+    # return overall_prob
 
 p_x_given_e = compute_probability_given_language(x_vector, theta_e)
-# p_x_given_j = compute_probability_given_language(x_vector, theta_j)
-# p_x_given_s = compute_probability_given_language(x_vector, theta_s)
+p_x_given_j = compute_probability_given_language(x_vector, theta_j)
+p_x_given_s = compute_probability_given_language(x_vector, theta_s)
 
 print("Probability of x given English:", p_x_given_e)
-# print("Probability of x given Japanese:", p_x_given_j)
-# print("Probability of x given Spanish:", p_x_given_s)
+print("Probability of x given Japanese:", p_x_given_j)
+print("Probability of x given Spanish:", p_x_given_s)
+
+print(p_x_given_e)
+print(p_x_given_j)
+print(p_x_given_s)
