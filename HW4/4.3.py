@@ -5,81 +5,73 @@ import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
-# Define the Neural Network
-class NeuralNetwork(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(NeuralNetwork, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, output_size)
-        self.sigmoid = nn.Sigmoid()
-        self.softmax = nn.Softmax(dim=1)
+class CustomNeuralNet(nn.Module):
+    def __init__(self, inputDim, hiddenDim, outputDim):
+        super(CustomNeuralNet, self).__init__()
+        self.firstLayer = nn.Linear(inputDim, hiddenDim)
+        self.secondLayer = nn.Linear(hiddenDim, outputDim)
+        self.sigmoidActivation = nn.Sigmoid()
+        self.softmaxActivation = nn.Softmax(dim=1)
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.sigmoid(x)
-        x = self.fc2(x)
-        x = self.softmax(x)
-        return x
+    def forward(self, tensorInput):
+        tensorInput = self.firstLayer(tensorInput)
+        tensorInput = self.sigmoidActivation(tensorInput)
+        tensorInput = self.secondLayer(tensorInput)
+        tensorInput = self.softmaxActivation(tensorInput)
+        return tensorInput
 
-# Load MNIST dataset
-transform = transforms.Compose([
+dataTransform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,))
 ])
 
-train_dataset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+mnistTrainDataset = torchvision.datasets.MNIST(root='./mnistData', train=True, download=True, transform=dataTransform)
+trainDataLoader = torch.utils.data.DataLoader(mnistTrainDataset, batch_size=64, shuffle=True)
 
-test_dataset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
+mnistTestDataset = torchvision.datasets.MNIST(root='./mnistData', train=False, download=True, transform=dataTransform)
+testDataLoader = torch.utils.data.DataLoader(mnistTestDataset, batch_size=64, shuffle=False)
 
-# Hyperparameters
-input_size = 28*28
-hidden_size = 300
-output_size = 200
-learning_rate = 0.001
-num_epochs = 5
+inputDimension = 28*28
+hiddenDimension = 300
+outputDimension = 10
+learningRate = 0.001
+trainingEpochs = 5
 
-# Model, Loss, and Optimizer
-model = NeuralNetwork(input_size, hidden_size, output_size)
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+neuralModel = CustomNeuralNet(inputDimension, hiddenDimension, outputDimension)
+lossFunction = nn.CrossEntropyLoss()
+optimizerFunction = optim.Adam(neuralModel.parameters(), lr=learningRate)
 
-# Training Loop
-losses = []
-for epoch in range(num_epochs):
-    for i, (images, labels) in enumerate(train_loader):
-        images = images.reshape(-1, input_size)
+epochLosses = []
+for epoch in range(trainingEpochs):
+    for dataBatchIndex, (imageBatch, labelBatch) in enumerate(trainDataLoader):
+        imageBatch = imageBatch.reshape(-1, inputDimension)
         
-        # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+        predictedOutputs = neuralModel(imageBatch)
+        batchLoss = lossFunction(predictedOutputs, labelBatch)
         
-        # Backward pass and optimization
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizerFunction.zero_grad()
+        batchLoss.backward()
+        optimizerFunction.step()
     
-    losses.append(loss.item())
+    epochLosses.append(batchLoss.item())
 
-# Test the model
-model.eval()
+neuralModel.eval()
 with torch.no_grad():
-    correct = 0
-    total = 0
-    for images, labels in test_loader:
-        images = images.reshape(-1, input_size)
-        outputs = model(images)
-        _, predicted = torch.max(outputs.data, 1)
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+    correctlyPredicted = 0
+    totalSamples = 0
+    for imageBatch, labelBatch in testDataLoader:
+        imageBatch = imageBatch.reshape(-1, inputDimension)
+        predictedOutputs = neuralModel(imageBatch)
+        _, predictedLabels = torch.max(predictedOutputs.data, 1)
+        totalSamples += labelBatch.size(0)
+        correctlyPredicted += (predictedLabels == labelBatch).sum().item()
 
-test_error = (total - correct) / total
-print('Test error of the network on the 10000 test images: {:.2f}'.format(test_error))
+calcTestError = (totalSamples - correctlyPredicted) / totalSamples
+print('Test error of the network on the 10000 test images: {:.2f}'.format(calcTestError))
 
-plt.plot(losses)
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.title('Learning Curve')
+plt.plot(epochLosses)
+plt.xlabel('Training Epochs')
+plt.ylabel('Epoch Loss')
+plt.title('Neural Network Learning Curve')
 plt.savefig("4.3.png")
 plt.show()

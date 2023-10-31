@@ -1,50 +1,31 @@
 import os
 
-folder_path = 'languageID'
+langID_directory = 'languageID'
 
-# Dictionaries to hold character counts for English, Japanese, and Spanish
-char_counts_e = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_j = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_s = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+englishCharacterCounts = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+japaneseCharacterCounts = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+spanishCharacterCounts = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 
-# Function to count valid characters in a file for a given language
-def count_chars_for_language(filepath, char_counts):
+def tallyLanguageCharacters(filepath, countsDictionary):
     with open(filepath, 'r', encoding="utf-8") as f:
-        content = f.read()
-        for char in content:
-            if char in char_counts:
-                char_counts[char] += 1
+        contentData = f.read()
+        for character in contentData:
+            if character in countsDictionary:
+                countsDictionary[character] += 1
 
-# Count characters for each language in the training data (0.txt to 9.txt)
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt") and int(filename[1:-4]) < 10:
-        filepath = os.path.join(folder_path, filename)
-        if filename.startswith('e'):
-            count_chars_for_language(filepath, char_counts_e)
-        elif filename.startswith('j'):
-            count_chars_for_language(filepath, char_counts_j)
-        elif filename.startswith('s'):
-            count_chars_for_language(filepath, char_counts_s)
+for file in os.listdir(langID_directory):
+    if file.endswith(".txt") and int(file[1:-4]) < 10:
+        fullPath = os.path.join(langID_directory, file)
+        if file.startswith('e'):
+            tallyLanguageCharacters(fullPath, englishCharacterCounts)
+        elif file.startswith('j'):
+            tallyLanguageCharacters(fullPath, japaneseCharacterCounts)
+        elif file.startswith('s'):
+            tallyLanguageCharacters(fullPath, spanishCharacterCounts)
 
-alpha = 0.5
-K = 27  # Number of valid characters (a-z and space)
+smoothingAlpha = 0.5
+possibleChars = 27
 
-# Compute class conditional probabilities for each character in each language
-theta_e = {char: (count + alpha) / (sum(char_counts_e.values()) + alpha * K) for char, count in char_counts_e.items()}
-theta_j = {char: round((count + alpha) / (sum(char_counts_j.values()) + alpha * K), 4) for char, count in char_counts_j.items()}
-theta_s = {char: round((count + alpha) / (sum(char_counts_s.values()) + alpha * K), 4) for char, count in char_counts_s.items()}
-
-# print("Theta for English:", theta_e)
-# print("Theta for Japanese:", theta_j)
-# print("Theta for Spanish:", theta_s)
-
-print(list(theta_j.values()))
-print()
-print(list(theta_s.values()))
-
-
-# for char in theta_j.keys():
-#     print("$$", char,":", theta_j[char], "$$")
-
-# for char in theta_s.keys():
-#     print("$$", char,":", theta_s[char], "$$")
+englishTheta = {char: (count + smoothingAlpha) / (sum(englishCharacterCounts.values()) + smoothingAlpha * possibleChars) for char, count in englishCharacterCounts.items()}
+japaneseTheta = {char: round((count + smoothingAlpha) / (sum(japaneseCharacterCounts.values()) + smoothingAlpha * possibleChars), 4) for char, count in japaneseCharacterCounts.items()}
+spanishTheta = {char: round((count + smoothingAlpha) / (sum(spanishCharacterCounts.values()) + smoothingAlpha * possibleChars), 4) for char, count in spanishCharacterCounts.items()}

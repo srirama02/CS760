@@ -1,34 +1,25 @@
 import os
 
-folder_path = 'languageID'
+langID_folder_path = 'languageID'
 
-# Dictionary to hold character counts for English
-char_counts_e = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+english_char_counts = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 
-# Function to count valid characters in a file for a given language
-def count_chars_for_language(filepath, char_counts):
+def tally_characters_in_file(filepath, counts_dictionary):
     with open(filepath, 'r', encoding="utf-8") as f:
         content = f.read()
-        for char in content:
-            if char in char_counts:
-                char_counts[char] += 1
+        for character in content:
+            if character in counts_dictionary:
+                counts_dictionary[character] += 1
 
-# Count characters for English in the training data (0.txt to 9.txt)
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt") and int(filename[1:-4]) < 10 and filename.startswith('e'):
-        filepath = os.path.join(folder_path, filename)
-        count_chars_for_language(filepath, char_counts_e)
+for file_name in os.listdir(langID_folder_path):
+    if file_name.endswith(".txt") and int(file_name[1:-4]) < 10 and file_name.startswith('e'):
+        full_path = os.path.join(langID_folder_path, file_name)
+        tally_characters_in_file(full_path, english_char_counts)
 
-# Total character count for English
-total_chars_e = sum(char_counts_e.values())
-alpha = 0.5
-K = 27  # Number of valid characters (a-z and space)
+total_english_chars = sum(english_char_counts.values())
+smoothing_alpha = 0.5
+num_possible_chars = 27
 
-# Compute class conditional probabilities for each character in English
-theta_e = {}
-for char, count in char_counts_e.items():
-    theta_e[char] = round((count + alpha) / (total_chars_e + alpha * K),4)
-
-    # print(char,":", theta_e[char])
-
-print(list(theta_e.values()))
+theta_english = {}
+for character, count in english_char_counts.items():
+    theta_english[character] = round((count + smoothing_alpha) / (total_english_chars + smoothing_alpha * num_possible_chars),4)

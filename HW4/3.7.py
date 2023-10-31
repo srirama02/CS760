@@ -1,97 +1,79 @@
 import os
 import math
 
-folder_path = 'languageID'
+langDirectory = 'languageID'
 
-# Initialize the bag-of-words count vector
-char_counts_e = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_j = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_s = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+englishCharFreqs = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+japaneseCharFreqs = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+spanishCharFreqs = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 
-def count_chars_for_language(filepath, char_counts):
-    with open(filepath, 'r', encoding="utf-8") as f:
-        content = f.read().lower()
-        for char in content:
-            if char in char_counts:
-                char_counts[char] += 1
+def tallyCharacterFrequencies(filePath, charFreqDict):
+    with open(filePath, 'r', encoding="utf-8") as f:
+        fileContent = f.read().lower()
+        for character in fileContent:
+            if character in charFreqDict:
+                charFreqDict[character] += 1
 
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt") and int(filename[1:-4]) < 10:
-        filepath = os.path.join(folder_path, filename)
-        if filename.startswith('e'):
-            count_chars_for_language(filepath, char_counts_e)
-        elif filename.startswith('j'):
-            count_chars_for_language(filepath, char_counts_j)
-        elif filename.startswith('s'):
-            count_chars_for_language(filepath, char_counts_s)
+for file in os.listdir(langDirectory):
+    if file.endswith(".txt") and int(file[1:-4]) < 10:
+        fullPath = os.path.join(langDirectory, file)
+        if file.startswith('e'):
+            tallyCharacterFrequencies(fullPath, englishCharFreqs)
+        elif file.startswith('j'):
+            tallyCharacterFrequencies(fullPath, japaneseCharFreqs)
+        elif file.startswith('s'):
+            tallyCharacterFrequencies(fullPath, spanishCharFreqs)
 
-alpha = 0.5
-K = 27  # Number of valid characters (a-z and space)
+smoothingAlpha = 0.5
+uniqueCharCount = 27
 
-theta_e = {char: math.log((count + alpha) / (sum(char_counts_e.values()) + alpha * K)) for char, count in char_counts_e.items()}
-theta_j = {char: math.log((count + alpha) / (sum(char_counts_j.values()) + alpha * K)) for char, count in char_counts_j.items()}
-theta_s = {char: math.log((count + alpha) / (sum(char_counts_s.values()) + alpha * K)) for char, count in char_counts_s.items()}
+logThetaEnglish = {char: math.log((count + smoothingAlpha) / (sum(englishCharFreqs.values()) + smoothingAlpha * uniqueCharCount)) for char, count in englishCharFreqs.items()}
+logThetaJapanese = {char: math.log((count + smoothingAlpha) / (sum(japaneseCharFreqs.values()) + smoothingAlpha * uniqueCharCount)) for char, count in japaneseCharFreqs.items()}
+logThetaSpanish = {char: math.log((count + smoothingAlpha) / (sum(spanishCharFreqs.values()) + smoothingAlpha * uniqueCharCount)) for char, count in spanishCharFreqs.items()}
 
-# Compute p(x | y) for each language
-# def compute_probability_given_language(x, theta):
-#     log_probability = 0
-#     for i, xi in enumerate(x):
-#         char = list(theta.keys())[i]
-#         log_probability += xi * theta[char]
-#     return math.exp(log_probability)
-
-def compute_probability_given_language(x, theta):
-    log_probability = 0
+def calculateLogProbability(x, logTheta):
+    totalLogProb = 0
     for i, xi in enumerate(x):
-        char = list(theta.keys())[i]
-        log_probability += xi * theta[char] 
-    return log_probability
+        charKey = list(logTheta.keys())[i]
+        totalLogProb += xi * logTheta[charKey] 
+    return totalLogProb
 
-def classify_document(file_path):
-    char_counts_test = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+def identifyLanguage(filePath):
+    testCharFreqs = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
     
-    with open(file_path, 'r', encoding="utf-8") as f:
+    with open(filePath, 'r', encoding="utf-8") as f:
         content = f.read().lower()
         for char in content:
-            if char in char_counts_test:
-                char_counts_test[char] += 1
+            if char in testCharFreqs:
+                testCharFreqs[char] += 1
 
-    x_vector = list(char_counts_test.values())
+    charVector = list(testCharFreqs.values())
     
-    p_x_given_e = compute_probability_given_language(x_vector, theta_e)
-    p_x_given_j = compute_probability_given_language(x_vector, theta_j)
-    p_x_given_s = compute_probability_given_language(x_vector, theta_s)
+    englishProb = calculateLogProbability(charVector, logThetaEnglish)
+    japaneseProb = calculateLogProbability(charVector, logThetaJapanese)
+    spanishProb = calculateLogProbability(charVector, logThetaSpanish)
 
-    posterior_e = p_x_given_e * prior_e
-    posterior_j = p_x_given_j * prior_j
-    posterior_s = p_x_given_s * prior_s
+    englishPosterior = englishProb * priorEnglish
+    japanesePosterior = japaneseProb * priorJapanese
+    spanishPosterior = spanishProb * priorSpanish
 
-    predictions = {'English': posterior_e, 'Japanese': posterior_j, 'Spanish': posterior_s}
-    return max(predictions, key=predictions.get)
+    languageProbs = {'English': englishPosterior, 'Japanese': japanesePosterior, 'Spanish': spanishPosterior}
+    return max(languageProbs, key=languageProbs.get)
 
-prior_e = 1/3
-prior_j = 1/3
-prior_s = 1/3
+priorEnglish = 1/3
+priorJapanese = 1/3
+priorSpanish = 1/3
 
-# Initialize the confusion matrix
-confusion_matrix = {
+languageMatrix = {
     'English': {'English': 0, 'Japanese': 0, 'Spanish': 0},
     'Japanese': {'English': 0, 'Japanese': 0, 'Spanish': 0},
     'Spanish': {'English': 0, 'Japanese': 0, 'Spanish': 0}
 }
 
-filename_to_language = {'e': 'English', 'j': 'Japanese', 's': 'Spanish'}
+fileToLang = {'e': 'English', 'j': 'Japanese', 's': 'Spanish'}
 
-
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt") and 10 <= int(filename[1:-4]) < 20:
-        true_label = filename_to_language[filename[0]]
-        predicted_label = classify_document(os.path.join(folder_path, filename))
-        confusion_matrix[predicted_label][true_label] += 1
-
-# Print the confusion matrix
-print("\nConfusion Matrix:")
-for true_label, row in confusion_matrix.items():
-    print(f"Predicted: {true_label}")
-    for true, count in row.items():
-        print(f"\tTrue: {true} - Count: {count}")
+for file in os.listdir(langDirectory):
+    if file.endswith(".txt") and 10 <= int(file[1:-4]) < 20:
+        actualLang = fileToLang[file[0]]
+        predictedLang = identifyLanguage(os.path.join(langDirectory, file))
+        languageMatrix[predictedLang][actualLang] += 1

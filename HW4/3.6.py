@@ -1,82 +1,73 @@
 import os
 import math
 
-folder_path = 'languageID'
+pathUnique = 'languageID'
 
-# Initialize the bag-of-words count vector for the test document
-char_counts_e = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_j = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_s = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
-char_counts_test = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+charCountsEnglish = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+charCountsJapanese = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+charCountsSpanish = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
+charCountsTest = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 
-def count_chars_for_language(filepath, char_counts):
-    with open(filepath, 'r', encoding="utf-8") as f:
-        content = f.read()
-        for char in content:
-            if char in char_counts:
-                char_counts[char] += 1
+def countChars(filepath, charDict):
+    with open(filepath, 'r', encoding="utf-8") as fileObj:
+        fileContent = fileObj.read()
+        for charUnique in fileContent:
+            if charUnique in charDict:
+                charDict[charUnique] += 1
 
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt") and int(filename[1:-4]) < 10:
-        filepath = os.path.join(folder_path, filename)
-        if filename.startswith('e'):
-            count_chars_for_language(filepath, char_counts_e)
-        elif filename.startswith('j'):
-            count_chars_for_language(filepath, char_counts_j)
-        elif filename.startswith('s'):
-            count_chars_for_language(filepath, char_counts_s)
+for file in os.listdir(pathUnique):
+    if file.endswith(".txt") and int(file[1:-4]) < 10:
+        filePathUnique = os.path.join(pathUnique, file)
+        if file.startswith('e'):
+            countChars(filePathUnique, charCountsEnglish)
+        elif file.startswith('j'):
+            countChars(filePathUnique, charCountsJapanese)
+        elif file.startswith('s'):
+            countChars(filePathUnique, charCountsSpanish)
 
-alpha = 0.5
-K = 27  # Number of valid characters (a-z and space)
+alphaVal = 0.5
+KVal = 27
 
-theta_e = {char: (count + alpha) / (sum(char_counts_e.values()) + alpha * K) for char, count in char_counts_e.items()}
-theta_j = {char: (count + alpha) / (sum(char_counts_j.values()) + alpha * K) for char, count in char_counts_j.items()}
-theta_s = {char: (count + alpha) / (sum(char_counts_s.values()) + alpha * K) for char, count in char_counts_s.items()}
+thetaEnglish = {char: (count + alphaVal) / (sum(charCountsEnglish.values()) + alphaVal * KVal) for char, count in charCountsEnglish.items()}
+thetaJapanese = {char: (count + alphaVal) / (sum(charCountsJapanese.values()) + alphaVal * KVal) for char, count in charCountsJapanese.items()}
+thetaSpanish = {char: (count + alphaVal) / (sum(charCountsSpanish.values()) + alphaVal * KVal) for char, count in charCountsSpanish.items()}
 
-# Count characters in the test document
-test_file_path = os.path.join(folder_path, 'e10.txt')
-with open(test_file_path, 'r', encoding="utf-8") as f:
-    content = f.read()
-    for char in content:
-        if char in char_counts_test:
-            char_counts_test[char] += 1
+testFilePath = os.path.join(pathUnique, 'e10.txt')
+with open(testFilePath, 'r', encoding="utf-8") as fileObj:
+    fileContentTest = fileObj.read()
+    for charUnique in fileContentTest:
+        if charUnique in charCountsTest:
+            charCountsTest[charUnique] += 1
 
-# Convert dictionary to a list to represent the vector
-x_vector = list(char_counts_test.values())
+xVec = list(charCountsTest.values())
 
-# Compute p(x | y) for each language
-def compute_probability_given_language(x, theta):
-    log_probability = 0
-    for i, xi in enumerate(x):
-        char = list(char_counts_test.keys())[i]
-        log_probability += xi * theta[char] 
-    return log_probability
+def computeProb(x, thetaDict):
+    logProb = 0
+    for idx, xVal in enumerate(x):
+        charKey = list(charCountsTest.keys())[idx]
+        logProb += xVal * thetaDict[charKey]
+    return logProb
 
-p_x_given_e = compute_probability_given_language(x_vector, theta_e)
-p_x_given_j = compute_probability_given_language(x_vector, theta_j)
-p_x_given_s = compute_probability_given_language(x_vector, theta_s)
+probEnglish = computeProb(xVec, thetaEnglish)
+probJapanese = computeProb(xVec, thetaJapanese)
+probSpanish = computeProb(xVec, thetaSpanish)
 
+priorEnglish = 1/3
+priorJapanese = 1/3
+priorSpanish = 1/3
 
-prior_e = 1/3
-prior_j = 1/3
-prior_s = 1/3
+postProbEnglish = probEnglish * priorEnglish
+postProbJapanese = probJapanese * priorJapanese
+postProbSpanish = probSpanish * priorSpanish
 
-# Compute posterior probabilities
-posterior_e = p_x_given_e * prior_e
-posterior_j = p_x_given_j * prior_j
-posterior_s = p_x_given_s * prior_s
+totalProbValue = postProbEnglish + postProbJapanese + postProbSpanish
+postProbEnglish /= totalProbValue
+postProbJapanese /= totalProbValue
+postProbSpanish /= totalProbValue
 
-# Normalize the posteriors so they sum to 1
-total_prob = posterior_e + posterior_j + posterior_s
-posterior_e /= total_prob
-posterior_j /= total_prob
-posterior_s /= total_prob
+print("Posterior probability of x given English:", postProbEnglish)
+print("Posterior probability of x given Japanese:", postProbJapanese)
+print("Posterior probability of x given Spanish:", postProbSpanish)
 
-print("Posterior probability of x given English:", posterior_e)
-print("Posterior probability of x given Japanese:", posterior_j)
-print("Posterior probability of x given Spanish:", posterior_s)
-
-# Predict the class label of x
-predictions = {'English': posterior_e, 'Japanese': posterior_j, 'Spanish': posterior_s}
-predicted_language = max(predictions, key=predictions.get)
-print("Predicted class label of x:", predicted_language)
+predictionsDict = {'English': postProbEnglish, 'Japanese': postProbJapanese, 'Spanish': postProbSpanish}
+predictedLang = max(predictionsDict, key=predictionsDict.get)
