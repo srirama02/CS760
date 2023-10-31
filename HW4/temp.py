@@ -3,7 +3,7 @@ import math
 
 folder_path = 'languageID'
 
-# Initialize the bag-of-words count vector for each language and the test document
+# Initialize the bag-of-words count vector for the test document
 char_counts_e = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 char_counts_j = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
 char_counts_s = {char: 0 for char in 'abcdefghijklmnopqrstuvwxyz '}
@@ -44,19 +44,49 @@ with open(test_file_path, 'r', encoding="utf-8") as f:
 # Convert dictionary to a list to represent the vector
 x_vector = list(char_counts_test.values())
 
-# Compute log(p(x | y)) for each language
-def compute_log_probability_given_language(x, theta):
+# Compute p(x | y) for each language
+def compute_probability_given_language(x, theta):
     log_probability = 0
     for i, xi in enumerate(x):
         char = list(char_counts_test.keys())[i]
-        if theta[char] > 0:  # Ensure the character probability is not zero before taking its logarithm
-            log_probability += xi * math.log(theta[char])
-    return log_probability  # Keep the probability in log space
+        log_probability += xi * theta[char] 
+    return log_probability
 
-log_p_x_given_e = compute_log_probability_given_language(x_vector, theta_e)
-log_p_x_given_j = compute_log_probability_given_language(x_vector, theta_j)
-log_p_x_given_s = compute_log_probability_given_language(x_vector, theta_s)
+# def OLDcompute_probability_given_language(x, theta):
+#     log_probability = 0
+#     for i, xi in enumerate(x):
+#         char = list(char_counts_test.keys())[i]
+#         log_probability += xi * theta[char] 
+#     return log_probability
 
-print("Log-probability of x given English:", log_p_x_given_e)
-print("Log-probability of x given Japanese:", log_p_x_given_j)
-print("Log-probability of x given Spanish:", log_p_x_given_s)
+# def compute_conditional_prob(x, theta, chunk_size=10):
+#     # words = list(x.keys())
+#     probs = []
+    
+#     # Compute product in chunks
+#     for i in range(0, len(words), chunk_size):
+#         chunk_prob = 1.0
+#         for word in words[i:i+chunk_size]:
+#             count = x[word]
+#             theta = compute_theta(word, lang)
+#             chunk_prob *= theta**count
+#         probs.append(chunk_prob)
+
+    # Compute the overall product
+    # overall_prob = 1.0
+    # for prob in probs:
+    #     overall_prob *= prob
+
+    # return overall_prob
+
+p_x_given_e = compute_probability_given_language(x_vector, theta_e)
+p_x_given_j = compute_probability_given_language(x_vector, theta_j)
+p_x_given_s = compute_probability_given_language(x_vector, theta_s)
+
+print("Probability of x given English:", p_x_given_e)
+print("Probability of x given Japanese:", p_x_given_j)
+print("Probability of x given Spanish:", p_x_given_s)
+
+print(p_x_given_e)
+print(p_x_given_j)
+print(p_x_given_s)

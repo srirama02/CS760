@@ -49,15 +49,34 @@ def compute_probability_given_language(x, theta):
     log_probability = 0
     for i, xi in enumerate(x):
         char = list(char_counts_test.keys())[i]
-        print(char, xi, theta[char], math.log(theta[char]))
-        log_probability += xi * math.log(theta[char])  # Summing log probabilities
-    print(log_probability, math.exp(log_probability))
-    return math.exp(log_probability)  # Convert back from log space to regular probabilities
+        log_probability += xi * theta[char] 
+    return log_probability
 
 p_x_given_e = compute_probability_given_language(x_vector, theta_e)
-# p_x_given_j = compute_probability_given_language(x_vector, theta_j)
-# p_x_given_s = compute_probability_given_language(x_vector, theta_s)
+p_x_given_j = compute_probability_given_language(x_vector, theta_j)
+p_x_given_s = compute_probability_given_language(x_vector, theta_s)
 
-print("Probability of x given English:", p_x_given_e)
-# print("Probability of x given Japanese:", p_x_given_j)
-# print("Probability of x given Spanish:", p_x_given_s)
+
+prior_e = 1/3
+prior_j = 1/3
+prior_s = 1/3
+
+# Compute posterior probabilities
+posterior_e = p_x_given_e * prior_e
+posterior_j = p_x_given_j * prior_j
+posterior_s = p_x_given_s * prior_s
+
+# Normalize the posteriors so they sum to 1
+total_prob = posterior_e + posterior_j + posterior_s
+posterior_e /= total_prob
+posterior_j /= total_prob
+posterior_s /= total_prob
+
+print("Posterior probability of x given English:", posterior_e)
+print("Posterior probability of x given Japanese:", posterior_j)
+print("Posterior probability of x given Spanish:", posterior_s)
+
+# Predict the class label of x
+predictions = {'English': posterior_e, 'Japanese': posterior_j, 'Spanish': posterior_s}
+predicted_language = max(predictions, key=predictions.get)
+print("Predicted class label of x:", predicted_language)

@@ -343,11 +343,25 @@ where $x=(x_1, \ldots, x_d)$.
 Show the three values: $\hat p(x \mid y=e), \hat p(x \mid y=j), \hat p(x \mid y=s)$.
 Hint: you may notice that we omitted the multinomial coefficient.  This is ok for classification because it is a constant w.r.t. $y$.
 
+\begin{soln}
+    I couldn't figure out how to properly get the probabilites:
+    $\hat p(x \mid y=e) = 216.63793160416324$
+    $\hat p(x \mid y=j) = 182.71375659526888$
+    $\hat p(x \mid y=s) = 208.8169652492985$
+\end{soln}
 
 \item
 Use Bayes rule and your estimated prior and likelihood, compute the posterior $\hat p(y \mid x)$.
 Show the three values: $\hat p(y=e \mid x), \hat p(y=j \mid x), \hat p(y=s \mid x)$.
 Show the predicted class label of $x$.
+
+\begin{soln}
+    $\hat p(y=e \mid x) = 0.35621$
+    $\hat p(y=j \mid x) = 0.30043$
+    $\hat p(y=s \mid x) = 0.34345$
+
+    The predicted class label is English.
+\end{soln}
 
 
 \item
