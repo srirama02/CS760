@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1699220253 "/home/sriram/Documents/github/CS760/HW5/cs760_hw5_v2.tex" "cs760_hw5_v2.pdf" "cs760_hw5_v2" 1699220254
+["pdflatex"] 1699499838 "/home/sriram/Documents/github/CS760/HW5/cs760_hw5_v2.tex" "cs760_hw5_v2.pdf" "cs760_hw5_v2" 1699499839
   "/etc/texmf/web2c/texmf.cnf" 1696457930 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/sriram/.texlive2021/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.600pk" 1698533724 6964 da508b091c803f8f6121e8d625bbdd90 ""
-  "/home/sriram/Documents/github/CS760/HW5/cs760_hw5_v2.tex" 1699220253 20811 74b5f2cae6dfa61824ea7a858c1a0220 ""
+  "/home/sriram/Documents/github/CS760/HW5/cs760_hw5_v2.tex" 1699499838 24386 b00161b90db50d9268b5cdc7502e0c42 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -48,6 +48,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1248133631 31809 8670ca339bf94e56da1fc21c80635e2a ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1248133631 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb" 1136849748 45758 19968a0990191524e34e1994d4a31cb6 ""
@@ -149,10 +150,13 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1696457942 4379155 98693266ff65f58d9f98aff394de12d2 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1696457963 2800222 407a650c66ece6100ffd3130a4a0a03b ""
+  "1.2.png" 1699497507 81117 dcb08d125b04eaea1f726c07a72c6746 ""
+  "2.3.kneePoint.png" 1699497755 25290 64d7b9e52a09471db48f1a7d66879971 ""
+  "2.3.png" 1699497756 112086 ce4e0ba6084c1f73f13a7811bd68c8f0 ""
   "buggy_pca.eps" 1698880428 20253 255a1e9e98eb71580107198fce185b32 ""
-  "cs760_hw5_v2.aux" 1699220254 1912 38f54187f6e30e533f0035b660cc0f2a "pdflatex"
-  "cs760_hw5_v2.out" 1699220254 1500 b9012373cc9197f1230f621548131831 "pdflatex"
-  "cs760_hw5_v2.tex" 1699220253 20811 74b5f2cae6dfa61824ea7a858c1a0220 ""
+  "cs760_hw5_v2.aux" 1699499839 2102 271e0690837d512cd93383fa84cbfce5 "pdflatex"
+  "cs760_hw5_v2.out" 1699499839 1500 b9012373cc9197f1230f621548131831 "pdflatex"
+  "cs760_hw5_v2.tex" 1699499838 24386 b00161b90db50d9268b5cdc7502e0c42 ""
   (generated)
   "cs760_hw5_v2.aux"
   "cs760_hw5_v2.log"

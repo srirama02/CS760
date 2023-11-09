@@ -184,6 +184,7 @@
 \author{
   Sriram Ashokkumar\\
   908 216 3750\\
+  https://github.com/srirama02/CS760/tree/main/HW5
 }
 
 \date{}
@@ -220,32 +221,16 @@ Let $\Jcal_K(X_1^n) = \min_{\mu_1^K, f} J(\mu_1^K, f; X_1^n)$. Prove that
 $\Jcal_{K}(X_1^n)$ is a non-increasing function of $K$.
 
 \begin{soln}
-  Let \( \Jcal_K(X_1^n) \) be the minimum value of the K-means objective function for a fixed \( K \), given by:
-  \begin{equation}
-      \Jcal_K(X_1^n) = \min_{\mu_1^K, f} J(\mu_1^K, f; X_1^n).
-  \end{equation}
-
-  We need to show that for any \( K \) and \( K+1 \) such that \( K < K+1 < n \), the following holds:
-  \begin{equation}
-      \Jcal_{K+1}(X_1^n) \leq \Jcal_K(X_1^n).
-  \end{equation}
-
-  Assume we have the optimal set of centers \( \mu_1^K \) and the optimal assignment rule \( f \) for \( K \) clusters that achieves the minimum \( \Jcal_K(X_1^n) \). Now consider adding one more center to form \( K+1 \) clusters. Place the new center \( \mu_{K+1} \) at the position of any existing center or at a new position, and define a new assignment rule \( f' \) which behaves exactly like \( f \) for the first \( K \) centers and does not initially assign any point to the new center \( \mu_{K+1} \). Therefore, initially we have:
-  \begin{equation}
-      J(\mu_1^{K+1}, f'; X_1^n) = J(\mu_1^K, f; X_1^n).
-  \end{equation}
-
-  Since \( \Jcal_{K+1}(X_1^n) \) is the minimum for \( K+1 \) centers, by definition, it cannot be greater than any other value of the objective function with \( K+1 \) centers. Thus, we have:
-  \begin{equation}
-      \Jcal_{K+1}(X_1^n) \leq J(\mu_1^{K+1}, f'; X_1^n).
-  \end{equation}
-
-  Combining the last two equations, we get:
-  \begin{equation}
-      \Jcal_{K+1}(X_1^n) \leq J(\mu_1^K, f; X_1^n) = \Jcal_K(X_1^n).
-  \end{equation}
-
-  This proves that \( \Jcal_{K}(X_1^n) \) is a non-increasing function of \( K \).
+  Let \( \Jcal_K(X_1^n) \) be the minimum value of the K-means objective function for a fixed \( K \), given by $
+      \Jcal_K(X_1^n) = \min_{\mu_1^K, f} J(\mu_1^K, f; X_1^n)$.
+  We need to show that for any \( K \) and \( K+1 \) such that \( K < K+1 < n \), $\Jcal_{K+1}(X_1^n) \leq \Jcal_K(X_1^n)$
+  is true. If we have the optimal set of centers \( \mu_1^K \) that achieves the minimum \( \Jcal_K(X_1^n) \). Now if we add one
+  more center(K+1 clusters), the the clustering algorithm will not have reached the minimum possible value has it hasn't
+  converged yet. Based on this we know that, we can get define  a new \( f' \) which behaves exactly like \( f \) for the first \( K \) centers and does not initially assign 
+  any point to the new center \( \mu_{K+1} \). This gives us $J(\mu_1^{K+1}, f'; X_1^n) = J(\mu_1^K, f; X_1^n)$. Since \( \Jcal_{K+1}(X_1^n) \) is 
+  the minimum for \( K+1 \) centers, it has to be less than any other value of the objective function with \( K+1 \) 
+  centers: $\Jcal_{K+1}(X_1^n) \leq J(\mu_1^{K+1}, f'; X_1^n)$. Combining the last two equations, 
+  we get $\Jcal_{K+1}(X_1^n) \leq J(\mu_1^K, f; X_1^n) = \Jcal_K(X_1^n)$.
 
 \end{soln}
 
@@ -253,29 +238,13 @@ $\Jcal_{K}(X_1^n)$ is a non-increasing function of $K$.
 Consider the K-means (Lloyd's) clustering algorithm we studied in class. We
 terminate the algorithm when there are no changes to the objective.
 Show that the algorithm terminates in a finite number of steps.
+
 \begin{soln}
-  We consider the standard K-means clustering algorithm. The algorithm proceeds iteratively as follows:
-  \begin{enumerate}
-      \item Initialize \( K \) cluster centers \( \mu_1^K \) in the data space.
-      \item \textbf{Assignment step:} Assign each data point \( X_i \) to the nearest cluster center \( \mu_k \).
-      \item \textbf{Update step:} Recompute the cluster centers as the mean of all points assigned to them.
-      \item Repeat steps 2 and 3 until the assignment of data points to centers does not change.
-  \end{enumerate}
-
-  To prove that the algorithm terminates in a finite number of steps, consider the following:
-
-  \begin{enumerate}
-      \item The K-means algorithm partitions the data space into a finite number of regions, each corresponding to a Voronoi cell defined by the closest cluster center.
-      \item In each iteration, data points are assigned to the nearest cluster center. This assignment is deterministic given the current cluster centers.
-      \item When the cluster centers are updated, they are computed as the centroid of the data points assigned to them. This results in the center moving inside the convex hull of the assigned data points, which is a finite space.
-      \item If there are no changes to the objective, it implies that the assignment of data points to the cluster centers remains the same. Given that the data set is finite, there are only a finite number of possible assignments.
-      \item Therefore, the algorithm must converge in a finite number of steps because there are only a finite number of ways to partition a finite data set into \( K \) clusters.
-      \item Furthermore, each iteration strictly decreases the objective function \( J \) (unless it has reached convergence), which is the sum of squared distances from each data point to its assigned cluster center.
-      \item Since the objective function \( J \) is bounded below by zero and strictly decreases with each iteration (except at termination), and there are only a finite number of different partitionings of the data set, the algorithm cannot cycle indefinitely and must terminate.
-  \end{enumerate}
-
-  Thus, the K-means algorithm will terminate in a finite number of steps.
-
+    The algorithm K-means algorithm partitions the data space into a finite nubmer of regions. And after each interation,
+    the data points are assigned to the nearest cluster center. As the dataset is finite, there is only a finte number
+    of possible assignments, so there are only a finte number of ways to partition into a K clusters. 
+    Each interation decreasets the objective function J until it has reached convergence, and the objective funciton is 
+    bounded by zero and decreases with each iteration, so the algorith must terminate.
 \end{soln}
 
 
@@ -349,6 +318,14 @@ K-means, means for GMMs) and map them to the distribution with the closest mean.
 Points break down: 7 points each for implementation of each method, 6 points for reporting of
 evaluation metrics.
 
+\begin{soln}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{1.2.png}  
+    \end{figure}
+\end{soln}
+
+
 
 \section{Linear Dimensionality Reduction}
 
@@ -359,14 +336,48 @@ Principal Components Analysis (PCA) is a popular method for linear dimensionalit
 \begin{enumerate}
 
 \item  \textbf{(4 Points)}
-Suppose we wish to find the first direction $a_1$ (such that $a_1^\top a_1 = 1$) to maximize $\frac{1}{n} \sum_i (a_1^\top x_i)^2$.
-Show that $a_1$ is the first right singular vector of $X$.
+    Suppose we wish to find the first direction $a_1$ (such that $a_1^\top a_1 = 1$) to maximize $\frac{1}{n} \sum_i (a_1^\top x_i)^2$.
+    Show that $a_1$ is the first right singular vector of $X$.
+
+    \begin{soln}
+    SVD of \( X \), which can be written as \( X = U \Sigma V^{\top} \), where \( U \) and \( V \) are orthogonal matrices and \( \Sigma \) is a diagonal matrix of singular values.
+
+    The optimization problem for finding \( a_1 \) is given by $$\max_{a_1^{\top} a_1 = 1} \frac{1}{n} \sum_{i=1}^{n} (a_1^{\top} x_i)^2$$
+    This is the same as maximizing the squared projection of the data onto \( a_1 \):$$\max_{a_1^{\top} a_1 = 1} a_1^{\top} \left( \frac{1}{n} X^{\top}X \right) a_1$$
+
+    The term \( \frac{1}{n} X^{\top}X \) is the sample covariance matrix of \( X \), denoted as \( S \). So:
+    \[
+    \max_{a_1^{\top} a_1 = 1} a_1^{\top} S a_1
+    \]
+
+    According to SVD the maximum is achieved when \( a_1 \) is the eigenvector of \( S \) corresponding to the largest eigenvalue. 
+    As \( S \) is \( S = \frac{1}{n}X^{\top} X \), and the eigenvectors of \( X^{\top} X \) are the right singular vectors of \( X \), then \( a_1 \), which 
+    maximizes the variance, must be the first right singular vector of \( X \).
+
+\end{soln}
 
 \item  \textbf{(6 Points)}
 Given $a_1, \dots, a_k$, let $A_k = [a_1, \dots, a_k]$ and 
 $\tilde{x}_i = x_i - A_kA_k^\top x_i$. We wish to find $a_{k+1}$, to maximize
 $\frac{1}{n} \sum_i (a_{k+1}^\top \tilde{x}_i)^2$. Show that $a_{k+1}$ is the
 $(k+1)^{th}$ right singular vector of $X$.
+
+\begin{soln}
+    
+    Given \( A_k = [a_1, \dots, a_k] \), the residual is \( \tilde{x}_i = x_i - A_k A_k^\top x_i \). To find \( a_{k+1} \), we solve the following optimization problem:
+    \[
+    \max_{a_{k+1}^\top a_{k+1} = 1} \frac{1}{n} \sum_{i=1}^n (a_{k+1}^\top \tilde{x}_i)^2
+    \]
+
+    This gives us the eigenvector of the covariance matrix of the residuals \( \tilde{S} \) associated with the largest eigenvalue:
+    \[
+    \max_{a_{k+1}^\top a_{k+1} = 1} a_{k+1}^\top \tilde{S} a_{k+1}
+    \]
+
+    Since \( \tilde{S} \) is the covariance matrix of \( X \) in the space orthogonal to \( A_k \), and the SVD
+    of \( X \) is \( X = U \Sigma V^\top \), the maximization of variance shows that \( a_{k+1} \) is the \((k+1)^{th}\) right 
+    singular vector of \( X \).
+\end{soln}
 
 
 \end{enumerate}
@@ -418,6 +429,21 @@ S = \frac{1}{n} \sum_{i=1}^n z_i z_i^\top
 \end{align*}
 Here, ${\bf 1}_d = [1, 1 \dots, 1]^\top \in\RR^d$ and $I_d$  is the $d\times d$ identity matrix.
 
+\begin{soln}
+
+    \[ J(A_1,b_1,Z_1) = \frac{1}{n} \sum_{i=1}^n \|x_i - A_1z_i - b_1\|^2_F \]
+    
+    Now, applying \( A_2 = A_1M^{-1} \), \( b_2 = b_1 - A_1M^{-1}p \), and \( Z_2 = Z_1 M^\top + \mathbf{1}p^\top \), the objective for \( (A_2, b_2, Z_2) \) is:
+    
+    \begin{align*}
+    J(A_2,b_2,Z_2) &= \frac{1}{n} \sum_{i=1}^n \|x_i - A_2^\top z_{2i} - b_2^\top\|^2_F \\
+    &= \frac{1}{n} \sum_{i=1}^n \|x_i - (A_1M^{-1})^\top(z_{1i}M^\top + p^\top) - (b_1 - A_1M^{-1}p)^\top\|^2_F \\
+    &= \frac{1}{n} \sum_{i=1}^n \|x_i - A_1^\top z_{1i} - b_1\|^2_F \\
+    &= J(A_1,b_1,Z_1)
+    \end{align*}
+    
+\end{soln}
+
 \begin{enumerate}
 \setcounter{enumi}{1}
 \item \textbf{(16 Points)}
@@ -427,12 +453,37 @@ would obtain $A, Z, b$ which minimize the objective and satisfy the constraints.
 \textbf{Hint: }The rank $k$ approximation of a matrix in Frobenius norm is obtained by
 taking its SVD and then zeroing out all but the first $k$ singular values.
 
+\begin{soln}
+    We can optimize the objective function for $b$. First we need to take the gradient with respect to $b$ and set it equal to zero.\\
+    
+        $$\frac{\partial}{\partial b} ( \frac{1}{n} \sum_{i = 1}^{n} \|x_i - Az_i - b\|^2 ) = 0 \implies \frac{1}{n} \sum_{i = 1}^{n} -2(x_i - Az_i - b) = 0$$\\
+        $$b = \frac{1}{n} \sum_{i = 1}^{n} (x_i - Az_i) \implies \frac{1}{n} \sum_{i = 1}^{n} x_i \,\;\; $$
+        As we know that $\frac{1}{n} \sum_{i = 1}^{n} z_i = 0$
+
+    
+    The procedure would be: \\
+    \begin{enumerate}
+        \item Set the b to as the mean of X.
+        \item Y = X - b
+        \item SVD of $Y$ : $Y = U \Sigma V^\top$
+        \item $Z = U_d$ and $A = \Sigma_dV_d^\top$; $U_d$ is the first column d columns of U and $V_d$ is the first d columns of $V$.
+        \item This gives us $Y = A Z^\top$
+    \end{enumerate}
+\end{soln}
+
+
 \item \textbf{(3 Points)}
 You are given a point $x_*$ in the original $D$ dimensional space.
 State the rule to obtain the $d$ dimensional
 representation $z_*$ for this new point.
 (If $x_*$ is some original point $x_i$ from the $D$--dimensional space, it shoud be the
 $d$--dimensional representation $z_i$.)
+
+\begin{soln}
+    First we need to center the new poit by subtracting the mean \( \bar{x} \) of the original data: $x_{c*} = x_* - \bar{x}$. Then
+    we need to project the centered point onto the D dimensional space using Matrix A: $z_* = A^\top x_{c*}$. A is the matrix
+    that is given by the dimensionality reduction process. It contains the basis vectors for the D dimensional space.
+\end{soln}
 
 
 \end{enumerate}
@@ -480,6 +531,17 @@ $d$. For this, observe the singular values in DRO and see if there is a clear
 ``knee point" in the spectrum.
 Attach any figures/ Statistics you computed to justify your choice.
 
+\begin{soln}
+    I plotted the singluar values from the svd function. I found the point in the graph where there was a clear ``knee point''.
+    I found this point at d=31.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.4\textwidth]{2.3.kneePoint.png}  
+    \end{figure}
+
+
+\end{soln}
+
 \item
 For the $2D$ dataset you need to attach the a 
 plot comparing the orignal points with the reconstructed points for all 4
@@ -490,6 +552,27 @@ where $x_i$'s are the original points and $r(z_i)$ are the $D$ dimensional point
 reconstructed from the 
 $d$ dimensional representation $z_i$.
 
+\begin{soln}
+    Reconstruction Errors: \\
+        Reconstruction error for Buggy PCA (2D): 44.34515418673971 \\
+        Reconstruction error for Demeaned PCA (2D): 0.5003042814256452 \\ 
+        Reconstruction error for Normalized PCA (2D): 2.4736041727385336 \\ 
+        Reconstruction error for DRO (2D): 0.5003042814256454 \\ 
+        Reconstruction error for Buggy PCA (1000D): 136384.9746109073 \\ 
+        Reconstruction error for Demeaned PCA (1000D): 136522.9794893014 \\ 
+        Reconstruction error for Normalized PCA (1000D): 136814.29049881166 \\ 
+        Reconstruction error for DRO (1000D): 136522.9794893014 \\
+
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.7\textwidth]{2.3.png}
+        \caption{Plot comparing the original points with the reconstructed points}
+    \end{figure}
+
+
+\end{soln}
+
 \item \textbf{Questions:} After you have completed the experiments, please answer the following questions.
 \begin{enumerate}
 \item Look at the results for Buggy PCA. The reconstruction error is bad and the
@@ -497,11 +580,23 @@ reconstructed points don't seem to well represent the original points. Why is
 this? \\
 \textbf{Hint: } Which subspace is Buggy PCA trying to project the points
 onto?
+
+\begin{soln}
+    As the original points are used direclty in the SVD without any demeaning, the Buggy PCA is trying to project the points onto
+    a subspace that is aligned with the mean of the data instead of the direction which best explains the variance in the data.
+\end{soln}
+
+
 \item The error criterion we are using is the average squared error 
 between the original points and the reconstructed points.
 In both examples DRO and demeaned PCA achieves the lowest error among all
 methods. 
 Is this surprising? Why?
+\begin{soln}
+    This is not suprising because both methods use demeaning which helps with centering the data. This helps as it makes sure that the
+    pricipal components are the directions that capture the most variance in the data.
+\end{soln}
+
 \end{enumerate}
 
 \item Point allocation:
