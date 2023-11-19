@@ -1,0 +1,13 @@
+\begin{thebibliography}{}
+
+\bibitem[Goodfellow et~al., 2014]{goodfellow2014generative}
+Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and Bengio, Y. (2014).
+\newblock Generative adversarial nets.
+\newblock {\em Advances in neural information processing systems}, 27.
+
+\bibitem[Kingma and Ba, 2014]{kingma2014adam}
+Kingma, D.~P. and Ba, J. (2014).
+\newblock Adam: A method for stochastic optimization.
+\newblock {\em arXiv preprint arXiv:1412.6980}.
+
+\end{thebibliography}
