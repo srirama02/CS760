@@ -145,8 +145,8 @@
 				\For{number of training iterations}
 				
 				\State{$\#$ Training discriminator}
-				\State{Sample minibatch of $n_{z}$ noise samples $\{z^{(1)}, z^{(2)}, \cdots, z^{(n_{z})}\}$ from noise prior $p_{g}(z)$}
-				\State{Sample minibatch of $\{x^{(1)}, x^{(2)}, \cdots, x^{(m)}\}$}
+				\State{Sample minibatch of $m$ noise samples $\{z^{(1)}, z^{(2)}, \cdots, z^{(n_{z})}\}$ from noise prior $p_{g}(z)$}
+				\State{Sample minibatch of $m$ examples $\{x^{(1)}, x^{(2)}, \cdots, x^{(m)}\}$}
 				\State{Update the discriminator by ascending its stochastic  gradient:
 					$$\nabla_{\theta_{d}} \big ( \cfrac{1}{m}  \sum_{i=1}^{m}  \log D(x^{(i)})  + \cfrac{1}{n_{z}} \sum_{i=1}^{n_{z}}  \log (1-D(G(z^{(i)})))\big )$$
 				}
@@ -195,7 +195,39 @@
 		\end{figure}
 		
 		
-		\begin{soln}  Solution goes here. Attach your learning curve and images. \end{soln}
+		\begin{soln}
+			Solution:
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=0.7\textwidth]{outputs/loss.png}
+				\caption{Learning curve for part a}
+				\label{fig:gan_q1_loss}
+			\end{figure}
+			
+			\begin{figure}[H]
+				\centering
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/gen_img1.png}
+					\caption{epoch 1}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/gen_img50.png}
+					\caption{epoch 50}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/gen_img100.png}
+					\caption{epoch 100}
+				\end{subfigure}
+				\caption{Generated images for part a}
+				\label{fig:three graphs}
+			\end{figure}
+
+		\end{soln}
 		
 		
 		
@@ -208,13 +240,86 @@
         You may find this helpful: https://jonathan-hui.medium.com/gan-what-is-wrong-with-the-gan-cost-function-6f594162ce01
 		\hfill (10 pts)
 		
-		\begin{soln}  Solution goes here. Attach your learning curve and images. \end{soln}
+		\begin{soln} 
+			The training does not work as both the generator and descrimator loss goes to zero due to vanishing gradients problem as mentioned in the linked article.
+		
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=0.7\textwidth]{outputs/b.loss.png}
+				\caption{Learning curve for part b}
+				\label{fig:gan_q1_loss}
+			\end{figure}
+			
+			\begin{figure}[H]
+				\centering
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/b.gen_img1.png}
+					\caption{epoch 1}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/b.gen_img50.png}
+					\caption{epoch 50}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/b.gen_img100.png}
+					\caption{epoch 100}
+				\end{subfigure}
+				\caption{Generated images for part b}
+				\label{fig:three graphs}
+			\end{figure}
+		
+		
+		
+		
+		\end{soln}
 		
 		\item Except the method that we used in (a), how can we improve training for GAN? Implement that and report your setup, learning curves, and generated images in epoch 1, 50, 100.
         This question is an open-ended question and you can choose whichever method you want.
 		\hfill (20 pts)
 		
-		\begin{soln}  Solution goes here. Attach your learning curve and images, and a short description of the method. \end{soln}
+		\begin{soln}
+			I made a few changes. I added some label smoothing, where I used soft labels instead of hard labels.
+			I also added some gaussian noise to the inputs of the discriminator which can help with overfitting.
+			I also changed the generator loss function, so that instead of the standard BCE loss, I used negative of the discrimninator's predictions.
+			I added learning rate scheduling so that the learning rates change dynamically during taining(decreases as the training progresses).
+			I also use a smaller learning rate for the discriminator than the generator. The learning curve shown is over 200 epochs.
+
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=0.7\textwidth]{outputs/c.loss.png}
+				\caption{Learning curve for part c}
+				\label{fig:gan_q1_loss}
+			\end{figure}
+			
+			\begin{figure}[H]
+				\centering
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/c.gen_img1.png}
+					\caption{epoch 1}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/c.gen_img50.png}
+					\caption{epoch 50}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}[b]{0.3\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{outputs/c.gen_img100.png}
+					\caption{epoch 100}
+				\end{subfigure}
+				\caption{Generated images for part c}
+				\label{fig:three graphs}
+			\end{figure}
+		
+		\end{soln}
 		
 	\end{enumerate}
 
@@ -229,29 +334,31 @@ Consider the directed graphical model (aka Bayesian network) in Figure~\ref{fig:
 Compute $P(B=t \mid E=f,J=t,M=t)$ and $P(B=t \mid E=t,J=t,M=t)$. (10 points for each) These are the conditional probabilities of a burglar in your house (yikes!) when both of your neighbors John and Mary call you and say they hear an alarm in your house, but without or with an earthquake also going on in that area (what a busy day), respectively.
 
 \begin{soln}
-	The conditional probabilities are computed using the provided Conditional Probability Tables (CPTs) from the Bayesian network:
+	\begin{enumerate}
+		\item $P(B=t \mid E=f, J=t, M=t) = \frac{P(B=t, E=f, J=t, M=t)}{P(B=t, E=f, J=t, M=t) + P(B=f, E=f, J=t, M=t)}$ \\
 
-	\[
-	P(B=t \mid E=f, J=t, M=t) = \frac{P(B=t) \cdot P(E=f) \cdot P(A=t \mid B=t, E=f) \cdot P(J=t \mid A=t) \cdot P(M=t \mid A=t)}{P(E=f, J=t, M=t)}
-	\]
-
-	\[
-	P(B=t \mid E=f, J=t, M=t) \approx 0.471
-	\]
-
-	Similarly,
-
-	\[
-	P(B=t \mid E=t, J=t, M=t) = \frac{P(B=t) \cdot P(E=t) \cdot P(A=t \mid B=t, E=t) \cdot P(J=t \mid A=t) \cdot P(M=t \mid A=t)}{P(E=t, J=t, M=t)}
-	\]
-
-	\[
-	P(B=t \mid E=t, J=t, M=t) \approx 0.250
-	\]
-
-	These conditional probabilities represent the likelihood of a burglary occurring given the absence or presence of an earthquake while both neighbors John and Mary call to report hearing the alarm.
-
-
+			$P(B = t, E = f, J = t, M = t) = 
+			\sum\limits_{a \in \{A, \neg A\}} P(B)P(\neg E)P(a | B,\neg E)P(J | a)P(M | a) \\
+			= 0.1 * 0.8 * 0.8 * 0.9 * 0.7 + 0.1 * 0.8 * 0.2 * 0.2 * 0.1 = 0.0406$ \\
+			
+			$P(B=f, E=f, J=t, M=t) = \sum\limits_{a \in \{A, \neg A\}} P(\neg B)P(\neg E)P(a |\neg B,\neg E)P(J | a)P(M | a) \\
+			= 0.9 * 0.8 * 0.1 * 0.9 * 0.7 + 0.9 * 0.8 * 0.9 * 0.2 * 0.1  = 0.0583$ \\
+		
+			$P(B=t \mid E=f, J=t, M=t) = \frac{0.0406}{0.0406 + 0.0583} = 0.411$ \\
+		
+		\item $P(B=t \mid E=t, J=t, M=t) = \frac{P(B=t, E=t, J=t, M=t)}{P(B=t, E=t, J=t, M=t) + P(B=f, E=t, J=t, M=t)}$ \\
+						
+			$P(B = t, E = t, J = t, M = t) = 
+			\sum\limits_{a \in \{A, \neg A\}} P(B)P(E)P(a | B,E)P(J | a)P(M | a) \\
+			= 0.1 * 0.2 * 0.9 * 0.9 * 0.7 + 0.1 * 0.2 * 0.1 * 0.2 * 0.1 = 0.01138$ \\
+			
+			$P(B=f, E=t, J=t, M=t) = \sum\limits_{a \in \{A, \neg A\}} P(\neg B)P(E)P(a |\neg B,E)P(J | a)P(M | a) \\
+			= 0.9 * 0.2 * 0.3 * 0.9 * 0.7 + 0.9 * 0.2 * 0.7 * 0.2 * 0.1  = 0.03654$ \\
+		
+			$P(B=t \mid E=t, J=t, M=t) = \frac{0.01138}{0.01138 + 0.03654} = 0.237$ \\
+	\end{enumerate}
+	
+	
 \end{soln}
 
 
@@ -297,7 +404,6 @@ Suppose we wish to construct a directed graphical model for 3 features $X$, $Y$,
 			\item $P(X=F, Y=F) = \frac{\text{Count of }(X=F, Y=F)}{\text{Total Count}} = \frac{8 + 32}{100} = 0.40$
 		\end{itemize}
 
-		The mutual information $I(X, Y)$ is calculated as:
 
 		\[
 		I(X, Y) = \sum_{x \in \{T, F\}} \sum_{y \in \{T, F\}} p(x, y) \log\left(\frac{p(x, y)}{p(x)p(y)}\right)
@@ -321,24 +427,11 @@ Suppose we wish to construct a directed graphical model for 3 features $X$, $Y$,
 		= 0.278 \text{ bits}
 		\]
 
-		This calculation results in the mutual information $I(X, Y) \approx 0.278$ bits.
+		$I(X, Y) \approx 0.278$ bits.
 
 	\end{soln}
 	\item Compute the mutual information $I(X, Z)$ based on the frequencies observed in the data. (5 pts)
 	\begin{soln}
-		Given the calculated probabilities:
-		\begin{itemize}
-			\item $P(X=T) = 0.50$
-			\item $P(X=F) = 0.50$
-			\item $P(Z=T) = 0.57$
-			\item $P(Z=F) = 0.43$
-			\item $P(X=T, Z=T) = 0.38$
-			\item $P(X=T, Z=F) = 0.12$
-			\item $P(X=F, Z=T) = 0.17$
-			\item $P(X=F, Z=F) = 0.33$
-		\end{itemize}
-
-		The mutual information $I(X, Z)$ is calculated as:
 
 		\[
 		I(X, Z) = \sum_{x \in \{T, F\}} \sum_{z \in \{T, F\}} p(x, z) \log\left(\frac{p(x, z)}{p(x)p(z)}\right)
@@ -355,26 +448,12 @@ Suppose we wish to construct a directed graphical model for 3 features $X$, $Y$,
 		= 0.134 \text{ bits}
 		\]
 
-		This calculation results in the mutual information $I(X, Z) \approx 0.134$ bits.
+		$I(X, Z) \approx 0.134$ bits.
 
 
 	\end{soln}
 	\item Compute the mutual information $I(Z, Y)$ based on the frequencies observed in the data. (5 pts)
 	\begin{soln}
-		Given the calculated probabilities:
-		\begin{itemize}
-			\item $P(Y=T) = 0.50$
-			\item $P(Y=F) = 0.50$
-			\item $P(Z=T) = 0.57$
-			\item $P(Z=F) = 0.43$
-			\item $P(Z=T, Y=T) = 0.45$
-			\item $P(Z=T, Y=F) = 0.10$
-			\item $P(Z=F, Y=T) = 0.05$
-			\item $P(Z=F, Y=F) = 0.40$
-		\end{itemize}
-
-		The mutual information $I(Z, Y)$ is calculated as:
-
 		\[
 		I(Z, Y) = \sum_{z \in \{T, F\}} \sum_{y \in \{T, F\}} p(z, y) \log\left(\frac{p(z, y)}{p(z)p(y)}\right)
 		\]
@@ -390,36 +469,23 @@ Suppose we wish to construct a directed graphical model for 3 features $X$, $Y$,
 		= 0.398 \text{ bits}
 		\]
 
-		This calculation results in the mutual information $I(Z, Y) \approx 0.398$ bits.
+		$I(Z, Y) \approx 0.398$ bits.
 	\end{soln}
 	\item Which undirected edges will be selected by the Chow-Liu algorithm as the maximum spanning tree? (5 pts)
 	\begin{soln}
-		The mutual information values calculated earlier are:
 		\begin{itemize}
 			\item $I(X, Y) \approx 0.278$ bits
 			\item $I(X, Z) \approx 0.134$ bits
 			\item $I(Z, Y) \approx 0.398$ bits
 		\end{itemize}
 
-		The Chow-Liu algorithm constructs a maximum spanning tree (MST) by selecting edges based on the mutual information between pairs of variables. The edges with the highest mutual information values are included in the MST.
-
-		Given the calculated mutual information values, the selected edges for the MST will be:
-		\begin{itemize}
-			\item Edge between $Z$ and $Y$, since $I(Z, Y)$ has the highest value.
-			\item Edge between $X$ and $Y$, since $I(X, Y)$ is higher than $I(X, Z)$.
-		\end{itemize}
-
-		Therefore, the maximum spanning tree will include the edges $(Z, Y)$ and $(X, Y)$.
+		Based on the calculated mutual info, the selected edges are the edge between $Z$ and $Y$, since $I(Z, Y)$ has the highest value and the 
+		edge between $X$ and $Y$, since $I(X, Y)$ is higher than $I(X, Z)$. The MST will include the edges $(Z, Y)$ and $(X, Y)$.
 	\end{soln}
-	\item Root your tree at node $X$, assign directions to the selected edges. (5 pts)
+	\item Root your tree at node $X$, assign directions to the selected edges. (5 pts) \\
 	\begin{soln}
-		Once the maximum spanning tree is constructed with the edges $(Z, Y)$ and $(X, Y)$, we root the tree at node $X$ and assign directions to the edges as follows:
-
-		\begin{itemize}
-			\item Since the tree is rooted at $X$, the edge between $X$ and $Y$ is directed from $X$ to $Y$, resulting in $X \rightarrow Y$.
-			\item As $Y$ is connected to the root $X$, the edge between $Y$ and $Z$ is directed from $Y$ to $Z$, resulting in $Y \rightarrow Z$.
-		\end{itemize}
-
+		As the tree is rooted at $X$, the edge between $X$ and $Y$ is directed from $X$ to $Y$. 
+		And as $Y$ is connected to the root $X$, the edge between $Y$ and $Z$ is directed from $Y$ to $Z$. 
 		Therefore, the directed edges in the tree, rooted at $X$, are $X \rightarrow Y$ and $Y \rightarrow Z$.
 
 	\end{soln}

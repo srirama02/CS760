@@ -1,7 +1,8 @@
 \begin{thebibliography}{}
 
 \bibitem[Goodfellow et~al., 2014]{goodfellow2014generative}
-Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and Bengio, Y. (2014).
+Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair,
+  S., Courville, A., and Bengio, Y. (2014).
 \newblock Generative adversarial nets.
 \newblock {\em Advances in neural information processing systems}, 27.
 
