@@ -53,21 +53,26 @@ class QLearning(AbstractSolver):
 
         for t in range(self.options.steps):
             # Choose an action using epsilon-greedy strategy
+
             action = self.epsilon_greedy_action(state)
+            action = np.random.choice(np.arange(len(action)), p=action)
             
             # Take action and get reward, new state and whether we're done
-            next_state, reward, done, _ = self.env.step(action)
+            next_state, reward, done, _ = self.step(action)
             
             # Compute the best Q value for next state
-            best_next_action = np.argmax(self.Q[next_state])
-            td_target = reward + self.options.gamma * self.Q[next_state][best_next_action]
+            # best_next_action = np.argmax(self.Q[next_state])
+            # td_target = reward + self.options.gamma * self.Q[next_state][best_next_action]
             
             # Update the Q value for current state and action
-            self.Q[state][action] += self.options.alpha * (td_target - self.Q[state][action])
+            self.Q[state][action] += self.options.alpha * (reward + self.options.gamma * np.max(self.Q[next_state]) - self.Q[state][action])
             
-            state = next_state
+            # self.options.alpha * (td_target - self.Q[state][action])
+            
             if done:
                 break
+
+            state = next_state
             
 
 
@@ -110,11 +115,14 @@ class QLearning(AbstractSolver):
         #   YOUR IMPLEMENTATION HERE   #
         ################################
         # return action_probs
-    
-        if np.random.rand() < self.options.epsilon:
-            return self.env.action_space.sample()  # Random action
-        else:
-            return np.argmax(self.Q[state])  
+        action_probs = np.zeros(self.env.action_space.n)
+        for actionNo in range(self.env.action_space.n):
+            if actionNo == np.argmax(self.Q[state]):
+                action_probs[actionNo] = 1 - self.options.epsilon + self.options.epsilon / self.env.action_space.n
+            else:
+                action_probs[actionNo] = self.options.epsilon / self.env.action_space.n
+
+        return action_probs
 
 
 class Estimator:
