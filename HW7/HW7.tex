@@ -297,7 +297,66 @@ Let the step size parameter $\alpha=0.5$.
 
 \item (5 pts) Without doing simulation, use Bellman equation to derive the true action-value table induced by the MDP. That is, calculate the true optimal action-values by hand.
 
-\item (5 pts) To the extent that you obtain different solutions for each question, explain why the action-values  differ.
+\begin{soln}
+    The true optimal action-values for the MDP are derived using the Bellman equation:
+
+    \begin{align*}
+    Q(s, a) &= r(s, a) + \gamma \max_{a'} Q(s', a') \\
+    \end{align*}
+
+    Given the MDP has two states (A and B) and two actions (move and stay), with deterministic transitions and rewards of 0 for 'move' and 1 for 'stay', we have:
+
+    \begin{align*}
+    Q(A, \text{stay}) &= 1 + 0.8 \max(Q(A, \text{stay}), Q(A, \text{move})) \\
+    Q(A, \text{move}) &= 0.8 \max(Q(B, \text{stay}), Q(B, \text{move})) \\
+    Q(B, \text{stay}) &= 1 + 0.8 \max(Q(B, \text{stay}), Q(B, \text{move})) \\
+    Q(B, \text{move}) &= 0.8 \max(Q(A, \text{stay}), Q(A, \text{move})) \\
+    \end{align*}
+
+    Considering the symmetry in the MDP, we simplify the equations to:
+
+    \begin{align*}
+    Q_s &= 1 + 0.8 Q_s \\
+    Q_m &= 0.8 Q_s \\
+    \end{align*}
+
+    Solving these equations, we find:
+
+    \begin{align*}
+    Q_s &= 5.0 \\
+    Q_m &= 4.0 \\
+    \end{align*}
+
+    Thus, the true optimal action-values for the MDP are:
+
+    \begin{align*}
+    Q(A, \text{stay}) = Q(B, \text{stay}) &= 5.0 \\
+    Q(A, \text{move}) = Q(B, \text{move}) &= 4.0 \\
+    \end{align*}
+
+    These values indicate that the optimal action in each state is to 'stay', which aligns with the immediate reward of 1 for staying, as opposed to moving, which yields no immediate reward.
+\end{soln}
+
+
+\item (5 pts) To the extent that you obtain different solutions for each question, explain why the action-values  differ. \\
+\begin{soln}
+    The differences in action-values obtained from Q-learning and theoretical calculation using the Bellman equation can be attributed to the following:
+
+    \begin{itemize}
+    \item \textbf{Exploration and Exploitation}: The \(\epsilon\)-greedy policy in Q-learning involves exploration, which can lead to variations in learned action-values compared to the optimal values derived from the Bellman equation.
+
+    \item \textbf{Initial Conditions and Learning Rate}: Q-learning's outcomes depend on the initial Q-values and the learning rate (\(\alpha\)). Different initializations and learning rates can lead to different learning trajectories.
+
+    \item \textbf{Sample-Based Learning vs. Theoretical Calculation}: Q-learning is a sample-based approach and may not fully capture the state-action space within a limited number of steps, unlike the Bellman equation which assumes perfect knowledge of the MDP.
+
+    \item \textbf{Policy Differences}: The deterministic greedy policy and the \(\epsilon\)-greedy policy in Q-learning might lead to different action selections compared to the optimal policy assumed in theoretical calculations.
+
+    \item \textbf{Convergence Time}: The number of steps in Q-learning (200 in this case) might not be sufficient for convergence to the true optimal values.
+    \end{itemize}
+
+    In summary, the discrepancies arise from the differences in learning mechanisms and assumptions between practical Q-learning algorithms and theoretical optimal value calculations.
+
+\end{soln}
 
 \section{A2C (Extra credit)}
 \subsection{Implementation}
