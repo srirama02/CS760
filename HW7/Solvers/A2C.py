@@ -136,7 +136,7 @@ class A2C(AbstractSolver):
         # TODO: Compute advantages for each state-action pair in states and
         # actions.
         # values = self.actor_critic.value(states_tensor).squeeze()
-        values = self.actor_critic.value(states_tensor)
+        # values = self.actor_critic.value(states_tensor)
 
         advantages = returns - values.detach()
 
