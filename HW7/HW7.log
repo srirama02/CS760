@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.10.4)  7 DEC 2023 14:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.10.4)  10 DEC 2023 13:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -786,23 +786,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 271--274
 LaTeX Font Info:    Trying to load font information for OT1+phv on input line 280.
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
-) [4] [5] (./HW7.aux)
+) [4]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 346.
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [5] [6] (./HW7.aux)
 Package rerunfilecheck Info: File `HW7.out' has not changed.
 (rerunfilecheck)             Checksum: 6A16FCC8A023C7480CC006784403A0F2;853.
  ) 
 Here is how much of TeX's memory you used:
- 24101 strings out of 478287
- 444020 string characters out of 5849289
- 711673 words of memory out of 5000000
- 41824 multiletter control sequences out of 15000+600000
- 489615 words of font info for 73 fonts, out of 8000000 for 9000
+ 24129 strings out of 478287
+ 444420 string characters out of 5849289
+ 714673 words of memory out of 5000000
+ 41847 multiletter control sequences out of 15000+600000
+ 490943 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 100i,11n,104p,454b,901s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,12n,104p,454b,901s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on HW7.pdf (5 pages, 316902 bytes).
+Output written on HW7.pdf (6 pages, 322010 bytes).
 PDF statistics:
- 155 PDF objects out of 1000 (max. 8388607)
- 116 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
+ 159 PDF objects out of 1000 (max. 8388607)
+ 119 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
  71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

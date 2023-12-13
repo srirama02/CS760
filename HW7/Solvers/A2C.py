@@ -107,6 +107,8 @@ class A2C(AbstractSolver):
         """
 
         states_tensor = torch.tensor(states, dtype=torch.float32)
+        next_state_tensor = torch.tensor(next_state, dtype=torch.float32, requires_grad=False)
+
 
         # One-hot encoding for actions
         actions_one_hot = np.zeros([len(actions), self.env.action_space.n])
@@ -120,9 +122,11 @@ class A2C(AbstractSolver):
         returns = np.zeros_like(rewards)
         # TODO: Compute bootstrapped returns for each state-action in states
         # and actions
-        G = 0
+        # G = 0
+        G = 0 if done else self.actor_critic.value(next_state_tensor).item()
         for i in reversed(range(len(rewards))):
-            G = rewards[i] + (self.options.gamma * G * (1 - int(done)))
+            # G = rewards[i] + (self.options.gamma * G * (1 - int(done)))
+            G = rewards[i] + (self.options.gamma * G)
             returns[i] = G
         
         returns = torch.tensor(returns, dtype=torch.float32)
@@ -131,7 +135,9 @@ class A2C(AbstractSolver):
 
         # TODO: Compute advantages for each state-action pair in states and
         # actions.
-        values = self.actor_critic.value(states_tensor).squeeze()
+        # values = self.actor_critic.value(states_tensor).squeeze()
+        values = self.actor_critic.value(states_tensor)
+
         advantages = returns - values.detach()
 
         log_probs = torch.sum(
@@ -148,7 +154,9 @@ class A2C(AbstractSolver):
 
         # Compute actor (policy) and critic losses
         policy_loss = -log_probs * advantages  # Negative for gradient ascent
-        critic_loss = F.mse_loss(values, returns)
+        # critic_loss = F.mse_loss(values, returns)
+        critic_loss = torch.square(values - returns)
+
 
         # Total loss
         loss = policy_loss.mean() + critic_loss.mean()

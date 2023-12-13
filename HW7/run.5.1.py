@@ -4,6 +4,7 @@
 # attribution:
 # This CSCE-689 RL assignment codebase was developed at Texas A&M University.
 # The core code base was developed by Guni Sharon (guni@tamu.edu).
+import matplotlib.pyplot as plt
 
 import gym
 import optparse
@@ -98,6 +99,17 @@ def parse_list(string):
         l.append(int(n))
     return l
 
+def run_experiments_with_different_alpha(options, alpha_values):
+    all_stats = []
+
+    for alpha in alpha_values:
+        print(f"Running with alpha: {alpha}")
+        options.alpha = alpha
+        results = main(options)
+        all_stats.append(results['stats'])
+
+    return all_stats
+
 def main(options):
     resultdir = "Results/"
     resultdir = os.path.abspath("./{}".format(resultdir))
@@ -157,4 +169,15 @@ def main(options):
 
 if __name__ == "__main__":
     options = readCommand(sys.argv)
-    main(options)
+    # main(options)
+    alpha_values = [0.001, 0.005, 0.01, 0.05, 0.1]  # Define your alpha values here
+    all_stats = run_experiments_with_different_alpha(options, alpha_values)
+
+    # Plotting
+    for i, stats in enumerate(all_stats):
+        plt.plot(stats.episode_rewards, label=f'alpha={alpha_values[i]}')
+    plt.xlabel('Episode')
+    plt.ylabel('Final Reward')
+    plt.title('Final Reward per Episode for Different Alpha Values')
+    plt.legend()
+    plt.show()
