@@ -128,8 +128,8 @@
 %%% NOTE:  Replace 'NAME HERE' etc., and delete any "\red{}" wrappers (so it won't show up as red)
 
 \author{
-\red{$>>$NAME HERE$<<$} \\
-\red{$>>$ID HERE$<<$}\\
+\red{$>>$Sriram Ashokkumar$<<$} \\
+\red{$>>$908 216 3750$<<$}\\
 } 
 
 \date{}
@@ -267,6 +267,39 @@ Again for this command, the expected reward is given for a correct solution. If 
 
 Achieves a best performing policy with -13 reward.
 
+\begin{soln}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.train_episode.png}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.create_greedy_policy.png}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.epsilon.png}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.1.png}
+        \caption{Plot for python run.py -s ql -d CliffWalking -e 100 -a 0.2 -g 0.9 -p 0.1}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.2.png}
+        \caption{Plot for python run.py -s ql -d CliffWalking -e 100 -a 0.8 -g 0.5 -p 0.1}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/3.3.png}
+        \caption{Plot for python run.py -s ql -d CliffWalking -e 500 -a 0.6 -g 0.8 -p 0.1}
+    \end{figure}
+\end{soln}
+
+
 \section{Q-learning [20 pts]}
 For this question you can either reimplement your Q-learning code or use your previous implementation. You will be using a custom made MDP for analysis. Consider the following Markov Decision Process.
 It has two states $s$. It has two actions $a$: move and stay. The state transition is deterministic: ``move'' moves to the other state, while ``stay' stays at the current state. The reward $r$ is 0 for move,  1 for stay. There is a discounting factor $\gamma=0.8$.
@@ -291,71 +324,50 @@ $$Q(s_t, a_t) \Leftarrow (1-\alpha) Q(s_t, a_t) + \alpha \left( r_t + \gamma \ma
 Let the step size parameter $\alpha=0.5$.
 
 \begin{enumerate}
-\item (5 pts) Run Q-learning for 200 steps with a deterministic greedy behavior policy: at each state $s_t$ use the best action $a_t \in \argmax_a Q(s_t,a)$ indicated by the current action-value table. If there is a tie, prefer move. Show the action-value table at the end.
+\item (5 pts) Run Q-learning for 200 steps with a deterministic greedy behavior policy: at each state $s_t$ use the best action $a_t \in \argmax_a Q(s_t,a)$ indicated by the current action-value table. If there is a tie, prefer move. Show the action-value table at the end. \\
+\begin{soln}
+    $\begin{array}{c|cc}
+        & \text{move} & \text{stay} \\
+        \hline
+        A & 0 & 0 \\
+        B & 0 & 0 \\
+    \end{array}$
+        
+\end{soln}
 
-\item (5 pts) Reset and repeat the above, but with an $\epsilon$-greedy behavior policy: at each state $s_t$, with probability $1-\epsilon$ choose what the current Q table says is the best action: $\argmax_a Q(s_t,a)$; Break ties arbitrarily. Otherwise, (with probability $\epsilon$) uniformly chooses between move and stay (move or stay both with 1/2 probability). Use $\epsilon=0.5$.
+
+\item (5 pts) Reset and repeat the above, but with an $\epsilon$-greedy behavior policy: at each state $s_t$, with probability $1-\epsilon$ choose what the current Q table says is the best action: $\argmax_a Q(s_t,a)$; Break ties arbitrarily. Otherwise, (with probability $\epsilon$) uniformly chooses between move and stay (move or stay both with 1/2 probability). Use $\epsilon=0.5$. \\
+\begin{soln}
+
+    $\begin{array}{c|cc}
+        & \text{move} & \text{stay} \\
+        \hline
+        A & 3.988 & 4.999 \\
+        B & 3.999 & 4.993 \\
+    \end{array}$
+
+    % $[[3.98759303, 4.99901686], [3.99893229, 4.9931825 ]]$
+\end{soln}
+
 
 \item (5 pts) Without doing simulation, use Bellman equation to derive the true action-value table induced by the MDP. That is, calculate the true optimal action-values by hand.
 
 \begin{soln}
-    The true optimal action-values for the MDP are derived using the Bellman equation:
-
     \begin{align*}
-    Q(s, a) &= r(s, a) + \gamma \max_{a'} Q(s', a') \\
+        \text{Bellman Equation: } & Q^*(s, a) = \sum_{s'} P(s'|s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q^*(s', a') \right] \\
+        \text{As the transition is deterministic, } & P(s'|s, a) = 1 \text{ if } s' = s_{t+1} \text{ and } 0 \text{ otherwise.} \\
+        Q(A, \text{move}) &= 1.0*(0 + 0.8) = 0.8 \\
+        Q(B, \text{move}) &= 1.0*(0 + 0.8) = 0.8 \\
+        Q(A, \text{stay}) &= 1.0*(1 + 0.8) = 1.8 \\
+        Q(B, \text{stay}) &= 1.0*(1 + 0.8) = 1.8 \\
     \end{align*}
-
-    Given the MDP has two states (A and B) and two actions (move and stay), with deterministic transitions and rewards of 0 for 'move' and 1 for 'stay', we have:
-
-    \begin{align*}
-    Q(A, \text{stay}) &= 1 + 0.8 \max(Q(A, \text{stay}), Q(A, \text{move})) \\
-    Q(A, \text{move}) &= 0.8 \max(Q(B, \text{stay}), Q(B, \text{move})) \\
-    Q(B, \text{stay}) &= 1 + 0.8 \max(Q(B, \text{stay}), Q(B, \text{move})) \\
-    Q(B, \text{move}) &= 0.8 \max(Q(A, \text{stay}), Q(A, \text{move})) \\
-    \end{align*}
-
-    Considering the symmetry in the MDP, we simplify the equations to:
-
-    \begin{align*}
-    Q_s &= 1 + 0.8 Q_s \\
-    Q_m &= 0.8 Q_s \\
-    \end{align*}
-
-    Solving these equations, we find:
-
-    \begin{align*}
-    Q_s &= 5.0 \\
-    Q_m &= 4.0 \\
-    \end{align*}
-
-    Thus, the true optimal action-values for the MDP are:
-
-    \begin{align*}
-    Q(A, \text{stay}) = Q(B, \text{stay}) &= 5.0 \\
-    Q(A, \text{move}) = Q(B, \text{move}) &= 4.0 \\
-    \end{align*}
-
-    These values indicate that the optimal action in each state is to 'stay', which aligns with the immediate reward of 1 for staying, as opposed to moving, which yields no immediate reward.
 \end{soln}
 
 
 \item (5 pts) To the extent that you obtain different solutions for each question, explain why the action-values  differ. \\
 \begin{soln}
-    The differences in action-values obtained from Q-learning and theoretical calculation using the Bellman equation can be attributed to the following:
-
-    \begin{itemize}
-    \item \textbf{Exploration and Exploitation}: The \(\epsilon\)-greedy policy in Q-learning involves exploration, which can lead to variations in learned action-values compared to the optimal values derived from the Bellman equation.
-
-    \item \textbf{Initial Conditions and Learning Rate}: Q-learning's outcomes depend on the initial Q-values and the learning rate (\(\alpha\)). Different initializations and learning rates can lead to different learning trajectories.
-
-    \item \textbf{Sample-Based Learning vs. Theoretical Calculation}: Q-learning is a sample-based approach and may not fully capture the state-action space within a limited number of steps, unlike the Bellman equation which assumes perfect knowledge of the MDP.
-
-    \item \textbf{Policy Differences}: The deterministic greedy policy and the \(\epsilon\)-greedy policy in Q-learning might lead to different action selections compared to the optimal policy assumed in theoretical calculations.
-
-    \item \textbf{Convergence Time}: The number of steps in Q-learning (200 in this case) might not be sufficient for convergence to the true optimal values.
-    \end{itemize}
-
-    In summary, the discrepancies arise from the differences in learning mechanisms and assumptions between practical Q-learning algorithms and theoretical optimal value calculations.
-
+    The action-values differ because in the deterministic greedy behavior policy it tries to exploit rather than explore
+    (the arg max is the best action). In the eplison greedy policy it tries to explore as it doesn't always take the argmax.
 \end{soln}
 
 \section{A2C (Extra credit)}
@@ -383,6 +395,46 @@ The policy has a single hidden layer with 32 hidden units in that layer.
 
 For submission, plot the final reward/episode for 5 different values of either alpha or gamma. Then include a short (\verb|<5 sentence|) analysis on the impact that alpha/gamma had for the reward in this domain.
 
+\begin{soln}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/alpha0.001.png}
+        \caption{alpha:0.001}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/alpha0.01.png}
+        \caption{alpha:0.01}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/alpha0.0001.png}
+        \caption{alpha:0.0001}
+        \label{fig:a2c}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/alpha0.0005.png}
+        \caption{alpha:0.0005}
+        \label{fig:a2c}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/alpha0.00075.png}
+        \caption{alpha:0.00075}
+    \end{figure}
+
+    I tested with 5 different alpha values. I started with 0.0001 and saw that the results were ok and used that as a base line. I tried increase the alpha
+    to 0.01 and saw that the reward was much lower. I decreased the alpha to 0.0001 and saw that it wasn't as good as the baseline, but still better than
+    0.01. I then tried to use binary search in a sense to find the best alpha and narrowed it down to 0.00075 as the best alpha value as it resulted in the best
+    reward overall.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/5.code.png}
+        \caption{train() code}
+   \end{figure}
+\end{soln}
 
 
 \end{enumerate}

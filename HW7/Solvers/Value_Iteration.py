@@ -60,7 +60,6 @@ class ValueIteration(AbstractSolver):
         """
 
         # you can add variables here if it is helpful
-
         # Update the estimated value of each state
         for each_state in range(self.env.nS):
 
@@ -78,13 +77,10 @@ class ValueIteration(AbstractSolver):
                 for probability, next_state, reward, done in self.env.P[each_state][action]:
                     action_value += probability * (reward + self.options.gamma * self.V[next_state] * (not done))
 
-                # Update the best action value
                 best_action_value = max(best_action_value, action_value)
 
-            # Update the value of the current state
             self.V[each_state] = best_action_value
 
-        # Dont worry about this part
         self.statistics[Statistics.Rewards.value] = np.sum(self.V)
         self.statistics[Statistics.Steps.value] = -1
 
